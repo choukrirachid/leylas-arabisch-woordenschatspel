@@ -49,7 +49,7 @@ const modeLabels: Record<Exclude<Mode, "home">, { title: string; subtitle: strin
   fourForms: { title: "Vier vormen", subtitle: "Enkelvoud, meervoud, bepaald en onbepaald." },
   definiteness: { title: "Bepaald / onbepaald", subtitle: "Oefen مَعْرِفَة en نَكِرَة." },
   jar: { title: "Ism madjroor", subtitle: "Na فِي en عَلَى volgt een اِسْم مَجْرُور." },
-  zarf: { title: "Darf maqaan", subtitle: "Oefen ظَرْف مَكَان met bekende woorden." },
+  zarf: { title: "Darf makaan", subtitle: "Oefen ظَرْف مَكَان met bekende woorden." },
   ishara: { title: "Asmaa al ishara", subtitle: "Kies هَٰذَا of هَٰذِهِ." },
   grammar: { title: "Grammatica herkennen", subtitle: "Herken اِسْم, فِعْل en حَرْف." },
   gender: { title: "Mannelijk / vrouwelijk", subtitle: "Oefen مُذَكَّر en مُؤَنَّث." },
