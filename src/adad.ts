@@ -13,7 +13,7 @@ export const adadItems: AdadItem[] = [
   { value: 3, dutch: "drie", masculine: "ثَلَاثَةٌ", feminine: "ثَلَاثٌ" },
   { value: 4, dutch: "vier", masculine: "أَرْبَعَةٌ", feminine: "أَرْبَعٌ" },
   { value: 5, dutch: "vijf", masculine: "خَمْسَةٌ", feminine: "خَمْسٌ" },
-  { value: 6, dutch: "zes", masculine: "سِتَّةٌ", feminine: "سِتٌّ" },
+  { value: 6, dutch: "zes", masculine: "سِتَّةٌ", feminine: "سِتٌّ" },
   { value: 7, dutch: "zeven", masculine: "سَبْعَةٌ", feminine: "سَبْعٌ" },
   { value: 8, dutch: "acht", masculine: "ثَمَانِيَةٌ", feminine: "ثَمَانٍ" },
   { value: 9, dutch: "negen", masculine: "تِسْعَةٌ", feminine: "تِسْعٌ" },
@@ -28,4 +28,3 @@ export const getAdadGenderFromForm = (form: string): AdadGender | undefined => {
   if (!item) return undefined;
   return item.masculine === form ? "mudhakkar" : "muannath";
 };
-
