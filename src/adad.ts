@@ -10,14 +10,14 @@ export type AdadItem = {
 export const adadItems: AdadItem[] = [
   { value: 1, dutch: "één", masculine: "وَاحِدٌ", feminine: "وَاحِدَةٌ" },
   { value: 2, dutch: "twee", masculine: "اِثْنَانِ", feminine: "اِثْنَتَانِ" },
-  { value: 3, dutch: "drie", masculine: "ثَلَاثَةٌ", feminine: "ثَلَاثٌ" },
-  { value: 4, dutch: "vier", masculine: "أَرْبَعَةٌ", feminine: "أَرْبَعٌ" },
-  { value: 5, dutch: "vijf", masculine: "خَمْسَةٌ", feminine: "خَمْسٌ" },
-  { value: 6, dutch: "zes", masculine: "سِتَّةٌ", feminine: "سِتٌّ" },
-  { value: 7, dutch: "zeven", masculine: "سَبْعَةٌ", feminine: "سَبْعٌ" },
-  { value: 8, dutch: "acht", masculine: "ثَمَانِيَةٌ", feminine: "ثَمَانٍ" },
-  { value: 9, dutch: "negen", masculine: "تِسْعَةٌ", feminine: "تِسْعٌ" },
-  { value: 10, dutch: "tien", masculine: "عَشَرَةٌ", feminine: "عَشْرٌ" },
+  { value: 3, dutch: "drie", masculine: "ثَلَاثٌ", feminine: "ثَلَاثَةٌ" },
+  { value: 4, dutch: "vier", masculine: "أَرْبَعٌ", feminine: "أَرْبَعَةٌ" },
+  { value: 5, dutch: "vijf", masculine: "خَمْسٌ", feminine: "خَمْسَةٌ" },
+  { value: 6, dutch: "zes", masculine: "سِتٌّ", feminine: "سِتَّةٌ" },
+  { value: 7, dutch: "zeven", masculine: "سَبْعٌ", feminine: "سَبْعَةٌ" },
+  { value: 8, dutch: "acht", masculine: "ثَمَانٍ", feminine: "ثَمَانِيَةٌ" },
+  { value: 9, dutch: "negen", masculine: "تِسْعٌ", feminine: "تِسْعَةٌ" },
+  { value: 10, dutch: "tien", masculine: "عَشْرٌ", feminine: "عَشَرَةٌ" },
 ];
 
 export const getAdadForm = (item: AdadItem, gender: AdadGender): string =>
