@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { AdadModule } from "./AdadModule";
 import { grammarWords } from "./grammarWords";
 import type { Mistake, Mode, Question } from "./types";
 import {
@@ -54,6 +55,7 @@ const modeLabels: Record<Exclude<Mode, "home">, { title: string; subtitle: strin
   gender: { title: "Mannelijk / vrouwelijk", subtitle: "Oefen مُذَكَّر en مُؤَنَّث." },
   writing: { title: "Schrijfexamen", subtitle: "Schrijf op papier en controleer jezelf." },
   exam: { title: "Examenmodus", subtitle: "Twintig gemengde vragen." },
+  adad: { title: "ʿAdad / Getallen", subtitle: "Leer de mannelijke en vrouwelijke vormen van 1 t/m 10." },
 };
 
 const arabicForms = (items = vocabulary) =>
@@ -852,7 +854,8 @@ export default function App() {
     <main className="app-shell">
       {mode === "home" && <HomeScreen category={category} onCategory={setCategory} onStart={start} />}
       {mode === "vocabulary" && <VocabularyMode key={roundKey} items={filtered} onBack={goHome} />}
-      {mode !== "home" && mode !== "vocabulary" && (
+      {mode === "adad" && <AdadModule key={roundKey} onBack={goHome} />}
+      {mode !== "home" && mode !== "vocabulary" && mode !== "adad" && (
         <QuizMode
           key={`${mode}-${roundKey}`}
           title={modeLabels[mode].title}
