@@ -21,6 +21,9 @@ export type VocabularyItem = {
   arabicDefiniteJarr?: string;
   arabicIndefinitePluralJarr?: string;
   arabicDefinitePluralJarr?: string;
+  arabicDualRaf?: string;
+  arabicDualJarr?: string;
+  dutchDual?: string;
   category: Category;
   arabicType: ArabicType;
   gender: Gender;
@@ -81,6 +84,48 @@ const dutchForms: Record<string, [string, string?, string?, string?]> = {
   orange: ["een appelsien", "de appelsien", "appelsienen", "de appelsienen"],
 };
 
+const dualForms: Record<string, [string, string, string]> = {
+  book: ["كِتَابَانِ", "كِتَابَيْنِ", "twee boeken"],
+  pen: ["قَلَمَانِ", "قَلَمَيْنِ", "twee pennen"],
+  desk: ["مَكْتَبَانِ", "مَكْتَبَيْنِ", "twee bureaus"],
+  chair: ["كُرْسِيَّانِ", "كُرْسِيَّيْنِ", "twee stoelen"],
+  "teacher-m": ["مُعَلِّمَانِ", "مُعَلِّمَيْنِ", "twee leraren"],
+  "student-m": ["طَالِبَانِ", "طَالِبَيْنِ", "twee studenten"],
+  class: ["فَصْلَانِ", "فَصْلَيْنِ", "twee klassen"],
+  board: ["سَبُّورَتَانِ", "سَبُّورَتَيْنِ", "twee schoolborden"],
+  schoolbag: ["حَقِيبَتَانِ", "حَقِيبَتَيْنِ", "twee boekentassen"],
+  "student-f": ["طَالِبَتَانِ", "طَالِبَتَيْنِ", "twee studentes"],
+  "teacher-f": ["مُعَلِّمَتَانِ", "مُعَلِّمَتَيْنِ", "twee leraressen"],
+  bookcase: ["مَكْتَبَتَانِ", "مَكْتَبَتَيْنِ", "twee boekenkasten"],
+  language: ["لُغَتَانِ", "لُغَتَيْنِ", "twee talen"],
+  notebook: ["دَفْتَرَانِ", "دَفْتَرَيْنِ", "twee schriften"],
+  mushaf: ["مُصْحَفَانِ", "مُصْحَفَيْنِ", "twee mushafs"],
+  computer: ["حَاسُوبَانِ", "حَاسُوبَيْنِ", "twee computers"],
+  house: ["بَيْتَانِ", "بَيْتَيْنِ", "twee huizen"],
+  door: ["بَابَانِ", "بَابَيْنِ", "twee deuren"],
+  window: ["نَافِذَتَانِ", "نَافِذَتَيْنِ", "twee ramen"],
+  road: ["طَرِيقَانِ", "طَرِيقَيْنِ", "twee wegen"],
+  mosque: ["مَسْجِدَانِ", "مَسْجِدَيْنِ", "twee moskeeën"],
+  car: ["سَيَّارَتَانِ", "سَيَّارَتَيْنِ", "twee auto's"],
+  kitchen: ["مَطْبَخَانِ", "مَطْبَخَيْنِ", "twee keukens"],
+  date: ["تَمْرَتَانِ", "تَمْرَتَيْنِ", "twee dadels"],
+  fridge: ["ثَلَّاجَتَانِ", "ثَلَّاجَتَيْنِ", "twee koelkasten"],
+  garden: ["حَدِيقَتَانِ", "حَدِيقَتَيْنِ", "twee tuinen"],
+  tree: ["شَجَرَتَانِ", "شَجَرَتَيْنِ", "twee bomen"],
+  flower: ["زَهْرَتَانِ", "زَهْرَتَيْنِ", "twee bloemen"],
+  ball: ["كُرَتَانِ", "كُرَتَيْنِ", "twee ballen"],
+  bike: ["دَرَّاجَتَانِ", "دَرَّاجَتَيْنِ", "twee fietsen"],
+  plane: ["طَائِرَتَانِ", "طَائِرَتَيْنِ", "twee vliegtuigen"],
+  banana: ["مَوْزَتَانِ", "مَوْزَتَيْنِ", "twee bananen"],
+  plate: ["طَبَقَانِ", "طَبَقَيْنِ", "twee borden"],
+  peach: ["خَوْخَتَانِ", "خَوْخَتَيْنِ", "twee perziken"],
+  pear: ["إِجَّاصَتَانِ", "إِجَّاصَتَيْنِ", "twee peren"],
+  glass: ["كُوبَانِ", "كُوبَيْنِ", "twee glazen"],
+  table: ["طَاوِلَتَانِ", "طَاوِلَتَيْنِ", "twee tafels"],
+  apple: ["تُفَّاحَتَانِ", "تُفَّاحَتَيْنِ", "twee appels"],
+  orange: ["بُرْتُقَالَتَانِ", "بُرْتُقَالَتَيْنِ", "twee appelsienen"],
+};
+
 type NounRow = [
   id: string, dutch: string, plural: string | undefined, category: Category, gender: Gender,
   indefinite: string, definite: string, pluralIndefinite?: string, pluralDefinite?: string,
@@ -94,12 +139,16 @@ const noun = (row: NounRow): VocabularyItem => {
     arabicDefinitePluralJarr] = row;
   const [dutchIndefiniteSingular, dutchDefiniteSingular, dutchIndefinitePlural, dutchDefinitePlural] =
     dutchForms[id] ?? [dutchSingular, undefined, dutchPlural, undefined];
+  const dual = dualForms[id];
   return {
     id, dutchSingular, dutchPlural, category, gender, arabicType: "ism",
     dutchIndefiniteSingular, dutchDefiniteSingular, dutchIndefinitePlural, dutchDefinitePlural,
     arabicIndefiniteRaf, arabicDefiniteRaf, arabicIndefinitePluralRaf,
     arabicDefinitePluralRaf, arabicIndefiniteJarr, arabicDefiniteJarr,
     arabicIndefinitePluralJarr, arabicDefinitePluralJarr,
+    arabicDualRaf: dual?.[0],
+    arabicDualJarr: dual?.[1],
+    dutchDual: dual?.[2],
     hasPlural: Boolean(arabicIndefinitePluralRaf),
     hasDefiniteForm: Boolean(arabicDefiniteRaf),
     hasJarrForm: Boolean(arabicIndefiniteJarr),
