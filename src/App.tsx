@@ -805,6 +805,7 @@ function QuizMode({
             <>
               <div className="answer-reveal"><span>Het juiste antwoord is:</span><b className="arabic">{question.answer}</b></div>
               {!answered && <div className="two-buttons"><button className="correct" onClick={() => selfMark(true)}>Ik had het juist</button><button className="wrong" onClick={() => selfMark(false)}>Ik had het fout</button></div>}
+              {answered && <button className="primary full" onClick={next}>Volgende</button>}
             </>
           )}
         </div>
@@ -822,7 +823,7 @@ function QuizMode({
           {!answered && <button className="show-answer" onClick={() => { setRevealed(true); setMistakes((values) => [...values, { question, chosen: "Antwoord getoond" }]); }}>Toon antwoord</button>}
         </div>
       )}
-      {(answered || revealed) && (
+      {!question.selfCheck && (answered || revealed) && (
         <div className={`feedback ${isCorrect ? "good" : "try"}`}>
           <strong>{isCorrect ? "Goed!" : "Bijna. Het juiste antwoord is:"}</strong>
           {!isCorrect && <b className="arabic">{question.answer}</b>}
