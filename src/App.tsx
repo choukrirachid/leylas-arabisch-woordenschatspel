@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { AdadMadudModule } from "./AdadMadudModule";
 import { AdadModule } from "./AdadModule";
 import {
   contextualPhrases,
@@ -65,6 +66,7 @@ const modeLabels: Record<Exclude<Mode, "home">, { title: string; subtitle: strin
   exam: { title: "Examenmodus", subtitle: "Twintig gemengde vragen." },
   adad: { title: "ʿAdad / Getallen", subtitle: "Leer de mannelijke en vrouwelijke vormen van 1 t/m 10." },
   mubtadaKhabar: { title: "Mubtadaʾ / Khabar", subtitle: "Leer de جُمْلَة اِسْمِيَّة stap voor stap analyseren." },
+  adadMadud: { title: "ʿAdad wa Maʿdūd", subtitle: "Getal en geteld woord." },
 };
 
 const arabicForms = (items = vocabulary) =>
@@ -905,7 +907,8 @@ export default function App() {
       {mode === "vocabulary" && <VocabularyMode key={roundKey} items={filtered} onBack={goHome} />}
       {mode === "adad" && <AdadModule key={roundKey} onBack={goHome} />}
       {mode === "mubtadaKhabar" && <MubtadaKhabarModule key={roundKey} onBack={goHome} />}
-      {mode !== "home" && mode !== "vocabulary" && mode !== "adad" && mode !== "mubtadaKhabar" && (
+      {mode === "adadMadud" && <AdadMadudModule key={roundKey} onBack={goHome} />}
+      {mode !== "home" && mode !== "vocabulary" && mode !== "adad" && mode !== "mubtadaKhabar" && mode !== "adadMadud" && (
         <QuizMode
           key={`${mode}-${roundKey}`}
           title={modeLabels[mode].title}
