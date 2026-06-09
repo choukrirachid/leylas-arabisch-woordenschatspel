@@ -8,6 +8,7 @@ import {
 } from "./contextualPhrases";
 import { DualPracticeMode } from "./DualPracticeMode";
 import { grammarWords } from "./grammarWords";
+import { MubtadaKhabarModule } from "./MubtadaKhabarModule";
 import type { Mistake, Mode, Question } from "./types";
 import {
   vocabulary,
@@ -63,6 +64,7 @@ const modeLabels: Record<Exclude<Mode, "home">, { title: string; subtitle: strin
   writing: { title: "Schrijfexamen", subtitle: "Schrijf op papier en controleer jezelf." },
   exam: { title: "Examenmodus", subtitle: "Twintig gemengde vragen." },
   adad: { title: "ʿAdad / Getallen", subtitle: "Leer de mannelijke en vrouwelijke vormen van 1 t/m 10." },
+  mubtadaKhabar: { title: "Mubtadaʾ / Khabar", subtitle: "Leer de جُمْلَة اِسْمِيَّة stap voor stap analyseren." },
 };
 
 const arabicForms = (items = vocabulary) =>
@@ -902,7 +904,8 @@ export default function App() {
       {mode === "home" && <HomeScreen category={category} onCategory={setCategory} onStart={start} />}
       {mode === "vocabulary" && <VocabularyMode key={roundKey} items={filtered} onBack={goHome} />}
       {mode === "adad" && <AdadModule key={roundKey} onBack={goHome} />}
-      {mode !== "home" && mode !== "vocabulary" && mode !== "adad" && (
+      {mode === "mubtadaKhabar" && <MubtadaKhabarModule key={roundKey} onBack={goHome} />}
+      {mode !== "home" && mode !== "vocabulary" && mode !== "adad" && mode !== "mubtadaKhabar" && (
         <QuizMode
           key={`${mode}-${roundKey}`}
           title={modeLabels[mode].title}
