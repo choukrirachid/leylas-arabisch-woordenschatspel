@@ -1,6 +1,10 @@
 export type ArabicType = "ism" | "fi3l" | "harf" | "zarf";
 export type Gender = "mudhakkar" | "muannath" | "none";
 export type Definiteness = "marifa" | "nakira" | "not_applicable";
+export type SemanticTag =
+  | "person" | "school_object" | "furniture" | "building" | "room"
+  | "vehicle" | "food" | "drink" | "plant" | "nature" | "container"
+  | "place" | "transport" | "abstract" | "grammar";
 export type Category =
   | "school" | "house" | "food" | "outside_transport" | "fruit"
   | "numbers" | "verbs" | "adjectives" | "grammar";
@@ -36,6 +40,81 @@ export type VocabularyItem = {
   masculineDefiniteRaf?: string;
   feminineDefiniteRaf?: string;
   acceptedAnswers?: string[];
+  semanticTags?: SemanticTag[];
+  canBeLocation?: boolean;
+  canContainThings?: boolean;
+  canHaveThingsOnTop?: boolean;
+  canBeOnTopOfSomething?: boolean;
+  canBeBesideSomething?: boolean;
+  canBeUnderSomething?: boolean;
+  canBeInSomething?: boolean;
+};
+
+type SemanticContext = Pick<VocabularyItem,
+  "semanticTags" | "canBeLocation" | "canContainThings" | "canHaveThingsOnTop"
+  | "canBeOnTopOfSomething" | "canBeBesideSomething" | "canBeUnderSomething"
+  | "canBeInSomething"
+>;
+
+const context = (
+  semanticTags: SemanticTag[],
+  flags: Partial<Omit<SemanticContext, "semanticTags">> = {},
+): SemanticContext => ({
+  semanticTags,
+  canBeLocation: false,
+  canContainThings: false,
+  canHaveThingsOnTop: false,
+  canBeOnTopOfSomething: false,
+  canBeBesideSomething: false,
+  canBeUnderSomething: false,
+  canBeInSomething: false,
+  ...flags,
+});
+
+const semanticContextById: Record<string, SemanticContext> = {
+  "teacher-m": context(["person"], { canBeBesideSomething: true }),
+  "teacher-f": context(["person"], { canBeBesideSomething: true }),
+  "student-m": context(["person"], { canBeBesideSomething: true }),
+  "student-f": context(["person"], { canBeBesideSomething: true }),
+  desk: context(["furniture"], { canBeLocation: true, canHaveThingsOnTop: true, canBeBesideSomething: true, canBeUnderSomething: true }),
+  table: context(["furniture"], { canBeLocation: true, canHaveThingsOnTop: true, canBeBesideSomething: true, canBeUnderSomething: true }),
+  chair: context(["furniture"], { canBeLocation: true, canHaveThingsOnTop: true, canBeBesideSomething: true, canBeUnderSomething: true }),
+  schoolbag: context(["container"], { canBeLocation: true, canContainThings: true, canBeOnTopOfSomething: true, canBeBesideSomething: true, canBeUnderSomething: true }),
+  bookcase: context(["container"], { canBeLocation: true, canContainThings: true, canBeOnTopOfSomething: true, canBeBesideSomething: true, canBeUnderSomething: true }),
+  fridge: context(["container"], { canBeLocation: true, canContainThings: true, canBeOnTopOfSomething: true, canBeBesideSomething: true, canBeUnderSomething: true }),
+  glass: context(["container"], { canBeLocation: true, canContainThings: true, canBeOnTopOfSomething: true, canBeBesideSomething: true, canBeUnderSomething: true }),
+  house: context(["building", "place"], { canBeLocation: true, canContainThings: true, canBeBesideSomething: true, canBeInSomething: true }),
+  mosque: context(["building", "place"], { canBeLocation: true, canContainThings: true, canBeBesideSomething: true, canBeInSomething: true }),
+  class: context(["room", "place"], { canBeLocation: true, canContainThings: true, canBeBesideSomething: true, canBeInSomething: true }),
+  kitchen: context(["room", "place"], { canBeLocation: true, canContainThings: true, canBeBesideSomething: true, canBeInSomething: true }),
+  garden: context(["place", "nature"], { canBeLocation: true, canContainThings: true, canBeBesideSomething: true, canBeInSomething: true }),
+  book: context(["school_object"], { canBeOnTopOfSomething: true, canBeBesideSomething: true, canBeUnderSomething: true, canBeInSomething: true }),
+  pen: context(["school_object"], { canBeOnTopOfSomething: true, canBeBesideSomething: true, canBeUnderSomething: true, canBeInSomething: true }),
+  notebook: context(["school_object"], { canBeOnTopOfSomething: true, canBeBesideSomething: true, canBeUnderSomething: true, canBeInSomething: true }),
+  mushaf: context(["school_object"], { canBeOnTopOfSomething: true, canBeBesideSomething: true, canBeUnderSomething: true, canBeInSomething: true }),
+  computer: context(["school_object"], { canBeOnTopOfSomething: true, canBeBesideSomething: true, canBeUnderSomething: true, canBeInSomething: true }),
+  board: context(["school_object"], { canBeLocation: true, canBeBesideSomething: true }),
+  car: context(["vehicle", "transport"], { canBeLocation: true, canContainThings: true, canBeBesideSomething: true, canBeInSomething: true }),
+  bike: context(["vehicle", "transport"], { canBeLocation: true, canContainThings: true, canBeBesideSomething: true, canBeInSomething: true }),
+  plane: context(["vehicle", "transport"], { canBeLocation: true, canContainThings: true, canBeBesideSomething: true, canBeInSomething: true }),
+  bread: context(["food"], { canBeOnTopOfSomething: true, canBeBesideSomething: true, canBeInSomething: true }),
+  date: context(["food"], { canBeOnTopOfSomething: true, canBeBesideSomething: true, canBeInSomething: true }),
+  banana: context(["food"], { canBeOnTopOfSomething: true, canBeBesideSomething: true, canBeInSomething: true }),
+  peach: context(["food"], { canBeOnTopOfSomething: true, canBeBesideSomething: true, canBeInSomething: true }),
+  pear: context(["food"], { canBeOnTopOfSomething: true, canBeBesideSomething: true, canBeInSomething: true }),
+  apple: context(["food"], { canBeOnTopOfSomething: true, canBeBesideSomething: true, canBeInSomething: true }),
+  orange: context(["food"], { canBeOnTopOfSomething: true, canBeBesideSomething: true, canBeInSomething: true }),
+  plate: context(["food", "container"], { canBeLocation: true, canContainThings: true, canHaveThingsOnTop: true, canBeOnTopOfSomething: true, canBeBesideSomething: true }),
+  milk: context(["drink"], { canBeInSomething: true }),
+  water: context(["drink"], { canBeInSomething: true }),
+  tree: context(["plant", "nature"], { canBeLocation: true, canBeBesideSomething: true, canBeUnderSomething: true }),
+  flower: context(["plant", "nature"], { canBeLocation: true, canBeBesideSomething: true, canBeUnderSomething: true }),
+  door: context(["place"], { canBeLocation: true, canBeBesideSomething: true }),
+  window: context(["place"], { canBeLocation: true, canBeBesideSomething: true }),
+  road: context(["place", "transport"], { canBeLocation: true, canContainThings: true, canBeBesideSomething: true }),
+  ball: context(["school_object"], { canBeOnTopOfSomething: true, canBeBesideSomething: true, canBeUnderSomething: true, canBeInSomething: true }),
+  language: context(["abstract"]),
+  fruit: context(["abstract"]),
 };
 
 const dutchForms: Record<string, [string, string?, string?, string?]> = {
@@ -153,6 +232,7 @@ const noun = (row: NounRow): VocabularyItem => {
     hasDefiniteForm: Boolean(arabicDefiniteRaf),
     hasJarrForm: Boolean(arabicIndefiniteJarr),
     hasGenderPair: false,
+    ...(semanticContextById[id] ?? context(["abstract"])),
   };
 };
 
@@ -225,6 +305,7 @@ const simple = (
   id, dutchSingular, dutchIndefiniteSingular: dutchSingular,
   arabicIndefiniteRaf: arabic, category, arabicType, gender,
   hasPlural: false, hasDefiniteForm: false, hasJarrForm: false, hasGenderPair: false,
+  ...context(["abstract"]),
 });
 
 export const vocabulary: VocabularyItem[] = [

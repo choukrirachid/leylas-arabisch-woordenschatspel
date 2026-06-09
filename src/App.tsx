@@ -1,5 +1,11 @@
 import { useMemo, useState } from "react";
 import { AdadModule } from "./AdadModule";
+import {
+  contextualPhrases,
+  contextualPhrasesAreSafe,
+  contextMetadataIsSafe,
+  type ContextualPhraseTemplate,
+} from "./contextualPhrases";
 import { DualPracticeMode } from "./DualPracticeMode";
 import { grammarWords } from "./grammarWords";
 import type { Mistake, Mode, Question } from "./types";
@@ -71,6 +77,10 @@ const arabicForms = (items = vocabulary) =>
 
 const nouns = vocabulary.filter((item) => item.arabicType === "ism" && item.hasDefiniteForm);
 
+if (!contextualPhrasesAreSafe() || !contextMetadataIsSafe(vocabulary)) {
+  throw new Error("Onveilige plaatszin gevonden in contextualPhrases.");
+}
+
 const q = (
   id: string,
   prompt: string,
@@ -132,44 +142,41 @@ const definitenessQuestions = (count: number): Question[] =>
     );
   });
 
-const jarQuestions = (count: number): Question[] =>
-  Array.from({ length: count }, (_, index) => {
-    const jarNouns = nouns.filter((word) => word.hasJarrForm && word.dutchDefiniteSingular);
-    const item = jarNouns[Math.floor(Math.random() * jarNouns.length)];
-    const particle = index % 2 === 0 ? "فِي" : "عَلَى";
-    const dutchParticle = particle === "فِي" ? "in" : "op";
-    const definite = index % 3 !== 1;
-    const answer = `${particle} ${definite ? item.arabicDefiniteJarr : item.arabicIndefiniteJarr}`;
-    const wrong = [
-      `${particle} ${item.arabicDefiniteRaf}`,
-      `${particle} ${item.arabicIndefiniteRaf}`,
-      `${particle} ${definite ? item.arabicIndefiniteJarr : item.arabicDefiniteJarr}`,
-    ].filter((value): value is string => !value.includes("undefined"));
+const contextualQuestions = (
+  phrases: ContextualPhraseTemplate[],
+  count: number,
+  prefix: string,
+  explanation: string,
+): Question[] => {
+  const selected = shuffleArray(phrases);
+  const answerPool = phrases.map((phrase) => phrase.arabic);
+  return Array.from({ length: count }, (_, index) => {
+    const phrase = selected[index % selected.length];
     return q(
-      `jar-${item.id}`,
-      `Kies de juiste constructie: ${dutchParticle} ${definite ? item.dutchDefiniteSingular : item.dutchIndefiniteSingular}`,
-      answer,
-      wrong,
-      { source: item, explanation: "Na فِي en عَلَى komt een اِسْم مَجْرُور met kasra of kasratayn." },
-    );
-  });
-
-const zarfQuestions = (count: number): Question[] => {
-  const zarfs = grammarWords.filter((word) => word.grammarRole === "zarf_makaan");
-  const usable = nouns.filter((item) => item.arabicDefiniteJarr && item.dutchDefiniteSingular);
-  return Array.from({ length: count }, () => {
-    const zarf = zarfs[Math.floor(Math.random() * zarfs.length)];
-    const item = usable[Math.floor(Math.random() * usable.length)];
-    const answer = `${zarf.arabic} ${item.arabicDefiniteJarr}`;
-    return q(
-      `zarf-${zarf.id}-${item.id}`,
-      `Vertaal: ${zarf.dutch} ${item.dutchDefiniteSingular}`,
-      answer,
-      zarfs.map((word) => `${word.arabic} ${item.arabicDefiniteJarr}`),
-      { source: item, explanation: `${zarf.arabic} is een اِسْم / ظَرْف مَكَان.` },
+      `${prefix}-${phrase.id}-${index}`,
+      `Vertaal: ${phrase.dutch}`,
+      phrase.arabic,
+      answerPool,
+      { explanation },
     );
   });
 };
+
+const jarQuestions = (count: number): Question[] =>
+  contextualQuestions(
+    contextualPhrases.filter((phrase) => phrase.grammarFocus === "fi" || phrase.grammarFocus === "ala"),
+    count,
+    "jar",
+    "Na فِي en عَلَى komt een اِسْم مَجْرُور. Daarom krijgt het woord kasra.",
+  );
+
+const zarfQuestions = (count: number): Question[] =>
+  contextualQuestions(
+    contextualPhrases.filter((phrase) => phrase.grammarFocus === "zarf_makaan"),
+    count,
+    "zarf",
+    "Dit is een ظَرْف مَكَان. We gebruiken alleen zinnen die logisch zijn.",
+  );
 
 const isharaQuestions = (count: number): Question[] => {
   const usable = nouns.filter((item) => item.gender !== "none");
