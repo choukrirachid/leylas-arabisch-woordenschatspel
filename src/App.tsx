@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { AdadModule } from "./AdadModule";
+import { DualPracticeMode } from "./DualPracticeMode";
 import { grammarWords } from "./grammarWords";
 import type { Mistake, Mode, Question } from "./types";
 import {
@@ -379,6 +380,7 @@ function FlashcardMode({
   const [index, setIndex] = useState(0);
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
   const [showDefiniteForms, setShowDefiniteForms] = useState(false);
+  const [showDualForms, setShowDualForms] = useState(false);
   const card = cards[index % cards.length];
   if (!card) return <EmptyState onBack={onBack} />;
 
@@ -386,6 +388,7 @@ function FlashcardMode({
     setIndex((value) => value + 1);
     setIsAnswerVisible(false);
     setShowDefiniteForms(false);
+    setShowDualForms(false);
   };
 
   const progressLabel = direction === "nl-ar"
@@ -428,6 +431,7 @@ function FlashcardMode({
   const isVerb = item.arabicType === "fi3l";
   const isNumber = item.category === "numbers";
   const hasDefiniteStep = !isVerb && !isNumber && item.hasDefiniteForm && Boolean(item.arabicDefiniteRaf);
+  const hasDualStep = !isVerb && !isNumber && Boolean(item.arabicDualRaf && item.dutchDual);
   const typeLabel = isVerb ? "فِعْل" : "اِسْم";
   const genderLabel = item.gender === "mudhakkar" ? "مُذَكَّر" : item.gender === "muannath" ? "مُؤَنَّث" : undefined;
 
@@ -465,7 +469,7 @@ function FlashcardMode({
       <button className="back-link" onClick={onBack}>← Terug naar start</button>
       <div className="screen-title">
         <p>{progressLabel} • {index + 1}/{cards.length}</p>
-        <h2>{!isAnswerVisible ? "Wat is het Arabische woord?" : showDefiniteForms ? "Bepaalde vormen" : "Onbepaalde vormen"}</h2>
+        <h2>{!isAnswerVisible ? "Wat is het Arabische woord?" : showDefiniteForms ? "Bepaalde vormen" : showDualForms ? "Tweevoud" : "Onbepaalde vormen"}</h2>
       </div>
       <article className="flashcard">
         <h3>{item.dutchIndefiniteSingular}</h3>
@@ -474,6 +478,12 @@ function FlashcardMode({
             <div className="flashcard-row"><span>{isVerb || isNumber ? "Arabisch" : "Onbepaald"}</span><b className="arabic">{item.arabicIndefiniteRaf}</b></div>
             {!isVerb && !isNumber && item.hasPlural && item.arabicIndefinitePluralRaf && (
               <div className="flashcard-row"><span>Meervoud</span><b className="arabic">{item.arabicIndefinitePluralRaf}</b></div>
+            )}
+            {showDualForms && (
+              <>
+                <div className="flashcard-row dual"><span>Tweevoud</span><b className="arabic">{item.arabicDualRaf}</b></div>
+                <div className="flashcard-row dual"><span>Nederlands</span><b>{item.dutchDual}</b></div>
+              </>
             )}
             {(isVerb || isNumber) && <div className="flashcard-row"><span>Grammaticaal type</span><b className="arabic role">{typeLabel}</b></div>}
             {showDefiniteForms && (
@@ -489,6 +499,8 @@ function FlashcardMode({
       </article>
       {!isAnswerVisible
         ? <button className="primary full" onClick={() => setIsAnswerVisible(true)}>Toon antwoord</button>
+        : hasDualStep && !showDualForms
+          ? <button className="primary full" onClick={() => setShowDualForms(true)}>Toon tweevoud</button>
         : hasDefiniteStep && !showDefiniteForms
           ? <button className="primary full" onClick={() => setShowDefiniteForms(true)}>Toon bepaalde vormen</button>
         : <button className="primary full" onClick={nextCard}>Volgende woord</button>}
@@ -524,6 +536,7 @@ function VocabularyListMode() {
   const [arabicType, setArabicType] = useState<ListArabicType>("all");
   const [gender, setGender] = useState<ListGender>("all");
   const [expandedDefiniteForms, setExpandedDefiniteForms] = useState<Record<string, boolean>>({});
+  const [expandedDualForms, setExpandedDualForms] = useState<Record<string, boolean>>({});
 
   const entries = useMemo(() => {
     const vocabularyEntries = vocabulary.map((item) => ({
@@ -534,12 +547,15 @@ function VocabularyListMode() {
         item.dutchDefiniteSingular,
         item.dutchIndefinitePlural,
         item.dutchDefinitePlural,
+        item.dutchDual,
       ].filter(Boolean).join(" "),
       arabic: [
         item.arabicIndefiniteRaf,
         item.arabicDefiniteRaf,
         item.arabicIndefinitePluralRaf,
         item.arabicDefinitePluralRaf,
+        item.arabicDualRaf,
+        item.arabicDualJarr,
       ].filter(Boolean).join(" "),
       category: item.category,
       arabicType: item.arabicType,
@@ -624,7 +640,9 @@ function VocabularyListMode() {
           const item = entry.item;
           const isSimple = item.arabicType === "fi3l" || item.category === "numbers";
           const canShowDefinite = !isSimple && Boolean(item.arabicDefiniteRaf);
+          const canShowDual = !isSimple && Boolean(item.arabicDualRaf && item.dutchDual);
           const definiteIsExpanded = Boolean(expandedDefiniteForms[item.id]);
+          const dualIsExpanded = Boolean(expandedDualForms[item.id]);
           return (
             <article className="word-list-card" key={entry.id}>
               <section><h3>Nederlands</h3>
@@ -646,11 +664,30 @@ function VocabularyListMode() {
                     {definiteIsExpanded ? "Verberg bepaalde vormen" : "Toon bepaalde vormen"}
                   </button>
                 )}
+                {canShowDual && (
+                  <button
+                    className="definite-toggle dual-toggle"
+                    aria-expanded={dualIsExpanded}
+                    onClick={() => setExpandedDualForms((current) => ({
+                      ...current,
+                      [item.id]: !current[item.id],
+                    }))}
+                  >
+                    {dualIsExpanded ? "Verberg tweevoud" : "Toon tweevoud"}
+                  </button>
+                )}
               </section>
               {definiteIsExpanded && (
                 <section className="definite-section"><h3>Bepaalde vormen</h3>
                   <Field label="Bepaald" value={item.arabicDefiniteRaf} />
                   <Field label="Bepaald meervoud" value={item.arabicDefinitePluralRaf} />
+                </section>
+              )}
+              {dualIsExpanded && (
+                <section className="dual-section"><h3>Tweevoud</h3>
+                  <div className="word-list-meta"><span>Nederlands</span><b>{item.dutchDual}</b></div>
+                  <Field label="Arabisch" value={item.arabicDualRaf} />
+                  <Field label="Na فِي / عَلَى" value={item.arabicDualJarr} />
                 </section>
               )}
               <section><h3>Grammatica</h3>
@@ -669,10 +706,12 @@ function VocabularyListMode() {
 
 function VocabularyMode({ items, onBack }: { items: VocabularyItem[]; onBack: () => void }) {
   const [activeVocabularyTab, setActiveVocabularyTab] = useState<"practice" | "list">("practice");
-  const [style, setStyle] = useState<"choose" | FlashcardDirection | "quiz">("choose");
+  const [style, setStyle] = useState<"choose" | FlashcardDirection | "quiz" | "dual">("choose");
+  const dualExample = items.find((item) => item.arabicDualRaf && item.arabicDualJarr);
   if (style === "nl-ar" || style === "ar-nl") {
     return <FlashcardMode items={items} direction={style} onBack={() => setStyle("choose")} />;
   }
+  if (style === "dual") return <DualPracticeMode items={vocabulary} onBack={() => setStyle("choose")} />;
   if (style === "quiz") return <QuizMode title="Woordenschat • meerkeuze" initialQuestions={vocabularyQuestions(items, 10)} onBack={() => setStyle("choose")} />;
   return (
     <section>
@@ -687,6 +726,7 @@ function VocabularyMode({ items, onBack }: { items: VocabularyItem[]; onBack: ()
           <button className="module-card" onClick={() => setStyle("nl-ar")}><span className="module-number">A</span><span><strong>Nederlands → Arabisch</strong><small>Lees het Nederlands en raad het Arabische woord.</small></span></button>
           <button className="module-card" onClick={() => setStyle("ar-nl")}><span className="module-number">B</span><span><strong>Arabisch → Nederlands</strong><small>Lees de Arabische vorm en raad de betekenis.</small></span></button>
           <button className="module-card" onClick={() => setStyle("quiz")}><span className="module-number">C</span><span><strong>Meerkeuze</strong><small>Kies het juiste Arabische woord uit vier opties.</small></span></button>
+          <button className="module-card" onClick={() => setStyle("dual")}><span className="module-number">D</span><span><strong>Tweevoud oefenen</strong><small>Leer twee-vormen{dualExample ? ` zoals ${dualExample.arabicDualRaf} en ${dualExample.arabicDualJarr}.` : " met rafʿ en majrūr."}</small></span></button>
         </div>
       ) : <VocabularyListMode />}
     </section>

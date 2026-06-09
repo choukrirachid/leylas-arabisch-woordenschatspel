@@ -95,6 +95,8 @@ button:disabled { cursor: default; }
 .main-form { display: block; font-size: 40px; }
 .definite-toggle { width: 100%; min-height: 56px; margin-top: 10px; padding: 10px 16px; color: var(--purple); background: #faf7ff; border: 2px solid var(--purple); border-radius: 12px; font-weight: 900; }
 .definite-section { background: #f6f0ff; }
+.dual-toggle { color: #23654f; border-color: #4e9f80; background: #f1fbf7; }
+.dual-section { background: #edf9f4; }
 .no-results { padding: 50px 20px; text-align: center; background: white; border: 2px solid var(--line); border-radius: 18px; font-size: 20px; font-weight: 800; }
 .flashcard h3 { margin: 0 0 22px; text-align: center; font-size: 30px; }
 .flashcard h3.flashcard-question { font-size: clamp(48px, 8vw, 68px); line-height: 1.7; }
@@ -104,6 +106,7 @@ button:disabled { cursor: default; }
 .flashcard-row .arabic { flex: 1; font-size: 43px; }
 .flashcard-row .role { font-size: 36px; }
 .flashcard-row.definite { background: #f6f0ff; border-radius: 12px; }
+.flashcard-row.dual { background: #eef8f4; border-radius: 12px; }
 
 .results { padding-top: 30px; text-align: center; }
 .results h2 { margin: 0; color: var(--purple-dark); font-size: 90px; }
@@ -198,6 +201,38 @@ button:disabled { cursor: default; }
 .adad-inline-feedback.good { color: #185e45; background: #e3f7ef; }
 .adad-inline-feedback.try { color: #8e2c30; background: #fff0f0; }
 .adad-writing h3 { margin: 0; font-size: clamp(27px, 5vw, 40px); line-height: 1.45; }
+.dual-explanation { padding: 24px; background: white; border: 2px solid var(--line); border-radius: 22px; }
+.dual-explanation > p { font-size: 21px; line-height: 1.55; }
+.dual-explanation h3 { margin: 28px 0 12px; color: var(--purple-dark); }
+.dual-example { display: grid; grid-template-columns: minmax(150px, .7fr) 1.3fr; align-items: center; gap: 4px 20px; padding: 18px; background: #faf7ff; border-radius: 16px; }
+.dual-example span { font-weight: 800; }
+.dual-example .arabic { font-size: 40px; }
+.dual-rule-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0; }
+.dual-rule-grid > div { display: flex; flex-direction: column; align-items: center; padding: 15px; background: #edf9f4; border: 2px solid #a9d8c5; border-radius: 16px; font-weight: 800; }
+.dual-rule-grid .arabic { font-size: 44px; }
+.dual-menu .module-card:last-child { grid-column: 1 / -1; }
+.dual-learn-list { display: grid; gap: 16px; }
+.dual-learn-card { display: grid; grid-template-columns: .8fr 1.4fr .8fr; overflow: hidden; background: white; border: 2px solid var(--line); border-radius: 20px; }
+.dual-learn-card section { display: flex; flex-direction: column; gap: 7px; padding: 18px; border-left: 1px solid var(--line); }
+.dual-learn-card section:first-child { border-left: 0; background: #faf7ff; }
+.dual-learn-card h3 { margin: 0 0 6px; color: var(--purple); font-size: 16px; text-transform: uppercase; letter-spacing: .05em; }
+.dual-learn-card section > b { color: var(--purple-dark); font-size: 23px; }
+.dual-learn-card section > span { font-size: 18px; }
+.dual-learn-card section:nth-child(2) > div { display: grid; grid-template-columns: 130px 1fr; align-items: center; gap: 12px; border-top: 1px dashed var(--line); }
+.dual-learn-card section:nth-child(2) > div:first-of-type { border-top: 0; }
+.dual-learn-card .arabic { font-size: 35px; }
+.dual-learn-card .dual-grammar { display: inline; font-size: 25px; }
+.dual-flashcard { text-align: center; }
+.dual-dutch-question { font-size: clamp(38px, 7vw, 58px) !important; }
+.dual-answer { display: grid; gap: 4px; margin-top: 20px; }
+.dual-answer > div { display: grid; grid-template-columns: 170px 1fr; align-items: center; gap: 18px; min-height: 72px; padding: 8px 14px; border-top: 1px solid var(--line); }
+.dual-answer span { font-weight: 800; }
+.dual-answer .arabic { font-size: 40px; }
+.dual-question { margin-bottom: 18px; padding: 24px; text-align: center; background: white; border: 2px solid var(--line); border-radius: 20px; }
+.dual-question h3 { margin: 0; color: var(--purple-dark); font-size: clamp(30px, 6vw, 48px); }
+.dual-question h3.arabic { text-align: center; font-size: clamp(48px, 9vw, 70px); }
+.dual-text-option { text-align: center; font-size: 23px; font-weight: 900; }
+.dual-writing h3 { margin: 0; font-size: clamp(27px, 5vw, 40px); line-height: 1.5; }
 
 @media (max-width: 650px) {
   .app-shell { padding-inline: 14px; }
@@ -215,6 +250,15 @@ button:disabled { cursor: default; }
   .adad-match-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
   .adad-match-card { min-height: 88px; }
   .adad-match-card.arabic { font-size: 34px; }
+  .dual-menu .module-card:last-child { grid-column: auto; }
+  .dual-example { grid-template-columns: 1fr; }
+  .dual-example .arabic { padding-bottom: 8px; text-align: center; }
+  .dual-rule-grid { grid-template-columns: 1fr; }
+  .dual-learn-card { grid-template-columns: 1fr; }
+  .dual-learn-card section { border-top: 1px solid var(--line); border-left: 0; }
+  .dual-learn-card section:first-child { border-top: 0; }
+  .dual-learn-card section:nth-child(2) > div { grid-template-columns: 1fr; gap: 0; padding: 7px 0; }
+  .dual-answer > div { grid-template-columns: 1fr; gap: 0; }
 }
 
 @media (orientation: landscape) and (min-width: 700px) {
