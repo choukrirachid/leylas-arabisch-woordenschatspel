@@ -10,6 +10,7 @@ import {
 import { DualPracticeMode } from "./DualPracticeMode";
 import { grammarWords } from "./grammarWords";
 import { MubtadaKhabarModule } from "./MubtadaKhabarModule";
+import { TheoryPage, VocabularyTheory, type TheoryMode } from "./TheoryPages";
 import type { Mistake, Mode, Question } from "./types";
 import {
   vocabulary,
@@ -716,7 +717,7 @@ function VocabularyListMode() {
 }
 
 function VocabularyMode({ items, onBack }: { items: VocabularyItem[]; onBack: () => void }) {
-  const [activeVocabularyTab, setActiveVocabularyTab] = useState<"practice" | "list">("practice");
+  const [activeVocabularyTab, setActiveVocabularyTab] = useState<"learn" | "practice" | "list">("learn");
   const [style, setStyle] = useState<"choose" | FlashcardDirection | "quiz" | "dual">("choose");
   const dualExample = items.find((item) => item.arabicDualRaf && item.arabicDualJarr);
   if (style === "nl-ar" || style === "ar-nl") {
@@ -727,12 +728,13 @@ function VocabularyMode({ items, onBack }: { items: VocabularyItem[]; onBack: ()
   return (
     <section>
       <button className="back-link" onClick={onBack}>← Terug naar start</button>
-      <div className="screen-title"><p>Woordenschat</p><h2>{activeVocabularyTab === "practice" ? "Hoe wil je oefenen?" : "Woordenlijst"}</h2></div>
+      <div className="screen-title"><p>Woordenschat</p><h2>{activeVocabularyTab === "learn" ? "Woordenschat leren" : activeVocabularyTab === "practice" ? "Hoe wil je oefenen?" : "Woordenlijst"}</h2></div>
       <div className="vocabulary-tabs" role="tablist" aria-label="Woordenschatweergave">
+        <button role="tab" aria-selected={activeVocabularyTab === "learn"} className={activeVocabularyTab === "learn" ? "active" : ""} onClick={() => setActiveVocabularyTab("learn")}>Leren</button>
         <button role="tab" aria-selected={activeVocabularyTab === "practice"} className={activeVocabularyTab === "practice" ? "active" : ""} onClick={() => setActiveVocabularyTab("practice")}>Oefenen</button>
         <button role="tab" aria-selected={activeVocabularyTab === "list"} className={activeVocabularyTab === "list" ? "active" : ""} onClick={() => setActiveVocabularyTab("list")}>Woordenlijst</button>
       </div>
-      {activeVocabularyTab === "practice" ? (
+      {activeVocabularyTab === "learn" ? <VocabularyTheory onOpenList={() => setActiveVocabularyTab("list")} /> : activeVocabularyTab === "practice" ? (
         <div className="practice-choice">
           <button className="module-card" onClick={() => setStyle("nl-ar")}><span className="module-number">A</span><span><strong>Nederlands → Arabisch</strong><small>Lees het Nederlands en raad het Arabische woord.</small></span></button>
           <button className="module-card" onClick={() => setStyle("ar-nl")}><span className="module-number">B</span><span><strong>Arabisch → Nederlands</strong><small>Lees de Arabische vorm en raad de betekenis.</small></span></button>
@@ -740,6 +742,42 @@ function VocabularyMode({ items, onBack }: { items: VocabularyItem[]; onBack: ()
           <button className="module-card" onClick={() => setStyle("dual")}><span className="module-number">D</span><span><strong>Tweevoud oefenen</strong><small>Leer twee-vormen{dualExample ? ` zoals ${dualExample.arabicDualRaf} en ${dualExample.arabicDualJarr}.` : " met rafʿ en majrūr."}</small></span></button>
         </div>
       ) : <VocabularyListMode />}
+    </section>
+  );
+}
+
+const theoryModes: TheoryMode[] = [
+  "fourForms", "definiteness", "jar", "zarf", "ishara", "grammar", "gender", "writing",
+];
+
+function LearningModule({
+  mode,
+  items,
+  onBack,
+}: {
+  mode: TheoryMode;
+  items: VocabularyItem[];
+  onBack: () => void;
+}) {
+  const [view, setView] = useState<"menu" | "theory" | "practice">("menu");
+  if (view === "theory") return <TheoryPage mode={mode} onBack={() => setView("menu")} />;
+  if (view === "practice") {
+    return (
+      <QuizMode
+        title={modeLabels[mode].title}
+        initialQuestions={makeQuestions(mode, items, 10)}
+        onBack={() => setView("menu")}
+      />
+    );
+  }
+  return (
+    <section>
+      <button className="back-link" onClick={onBack}>← Terug naar start</button>
+      <div className="screen-title"><p>{modeLabels[mode].title}</p><h2>Kies wat je wilt doen</h2></div>
+      <div className="practice-choice theory-choice">
+        <button className="module-card" onClick={() => setView("theory")}><span className="module-number">1</span><span><strong>Leren</strong><small>Lees de regels en bekijk duidelijke voorbeelden.</small></span></button>
+        <button className="module-card" onClick={() => setView("practice")}><span className="module-number">2</span><span><strong>{mode === "writing" ? "Schrijf op papier" : "Oefenen"}</strong><small>{modeLabels[mode].subtitle}</small></span></button>
+      </div>
     </section>
   );
 }
@@ -908,7 +946,8 @@ export default function App() {
       {mode === "adad" && <AdadModule key={roundKey} onBack={goHome} />}
       {mode === "mubtadaKhabar" && <MubtadaKhabarModule key={roundKey} onBack={goHome} />}
       {mode === "adadMadud" && <AdadMadudModule key={roundKey} onBack={goHome} />}
-      {mode !== "home" && mode !== "vocabulary" && mode !== "adad" && mode !== "mubtadaKhabar" && mode !== "adadMadud" && (
+      {theoryModes.includes(mode as TheoryMode) && <LearningModule key={roundKey} mode={mode as TheoryMode} items={filtered} onBack={goHome} />}
+      {mode !== "home" && mode !== "vocabulary" && mode !== "adad" && mode !== "mubtadaKhabar" && mode !== "adadMadud" && !theoryModes.includes(mode as TheoryMode) && (
         <QuizMode
           key={`${mode}-${roundKey}`}
           title={modeLabels[mode].title}
