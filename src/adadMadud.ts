@@ -83,7 +83,9 @@ export function buildAdadMadudPhrase(
     return {
       number,
       itemId: item.id,
-      dutch: item.dutchIndefiniteSingular.replace(/^een\s+/i, "één "),
+      dutch: /^een\s+/i.test(item.dutchIndefiniteSingular)
+        ? item.dutchIndefiniteSingular.replace(/^een\s+/i, "één ")
+        : `één ${item.dutchIndefiniteSingular}`,
       arabic: `${singular} ${numberForm}`,
       explanation: `${singular} is ${masculine ? "مُذَكَّر" : "مُؤَنَّث"}, daarom gebruiken we ${numberForm}.`,
     };
@@ -112,4 +114,3 @@ export function buildAdadMadudPhrase(
     explanation: `${singular} is ${masculine ? "مُذَكَّر, daarom gebruiken we de vrouwelijke" : "مُؤَنَّث, daarom gebruiken we de mannelijke"} getalvorm ${numberForm}. Het getelde woord staat in meervoud majrūr: ${pluralJarr}.`,
   };
 }
-

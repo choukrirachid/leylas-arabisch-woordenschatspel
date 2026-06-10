@@ -16,7 +16,7 @@ export const contextualPhrases: ContextualPhraseTemplate[] = [
   { id: "student-in-class", dutch: "de student is in de klas", arabic: "الطَّالِبُ فِي الْفَصْلِ", grammarFocus: "fi" },
   { id: "teacher-in-mosque", dutch: "de leraar is in de moskee", arabic: "الْمُعَلِّمُ فِي الْمَسْجِدِ", grammarFocus: "fi" },
   { id: "apple-on-plate", dutch: "de appel is op het bord", arabic: "التُّفَّاحَةُ عَلَى الطَّبَقِ", grammarFocus: "ala" },
-  { id: "dates-on-plate", dutch: "de dadels zijn op het bord", arabic: "التَّمَرَاتُ عَلَى الطَّبَقِ", grammarFocus: "ala" },
+  { id: "dates-on-plate", dutch: "de dadels zijn op het bord", arabic: "التُّمُورُ عَلَى الطَّبَقِ", grammarFocus: "ala" },
   { id: "chair-under-table", dutch: "de stoel is onder de tafel", arabic: "الْكُرْسِيُّ تَحْتَ الطَّاوِلَةِ", grammarFocus: "zarf_makaan" },
   { id: "bike-beside-house", dutch: "de fiets is naast het huis", arabic: "الدَّرَّاجَةُ بِجَانِبِ الْبَيْتِ", grammarFocus: "zarf_makaan" },
   { id: "car-in-front-of-house", dutch: "de auto is voor het huis", arabic: "السَّيَّارَةُ أَمَامَ الْبَيْتِ", grammarFocus: "zarf_makaan" },
