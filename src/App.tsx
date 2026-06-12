@@ -318,7 +318,7 @@ function HomeScreen({
     <>
       <header className="hero">
         <p className="eyebrow">أَهْلًا وَسَهْلًا</p>
-        <h1>Leyla's Arabisch Woordenschatspel</h1>
+        <h1>Leyla’s Arabisch Oefenapp</h1>
         <p>Oefen rustig, tik op grote antwoorden en leer van elke fout.</p>
       </header>
       <CategoryFilter value={category} onChange={onCategory} />
