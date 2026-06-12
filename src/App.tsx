@@ -10,6 +10,7 @@ import {
 import { DualPracticeMode } from "./DualPracticeMode";
 import { grammarWords } from "./grammarWords";
 import { MubtadaKhabarModule } from "./MubtadaKhabarModule";
+import { SunMoonLettersModule } from "./SunMoonLettersModule";
 import { TheoryPage, VocabularyTheory, type TheoryMode } from "./TheoryPages";
 import type { Mistake, Mode, Question } from "./types";
 import {
@@ -68,6 +69,7 @@ const modeLabels: Record<Exclude<Mode, "home">, { title: string; subtitle: strin
   adad: { title: "ʿAdad / Getallen", subtitle: "Leer de mannelijke en vrouwelijke vormen van 1 t/m 10." },
   mubtadaKhabar: { title: "Mubtadaʾ / Khabar", subtitle: "Leer de جُمْلَة اِسْمِيَّة stap voor stap analyseren." },
   adadMadud: { title: "ʿAdad wa Maʿdūd", subtitle: "Getal en geteld woord." },
+  sunMoon: { title: "Zonneletters / maanletters", subtitle: "Leer الحروف الشمسية والقمرية herkennen." },
 };
 
 const arabicForms = (items = vocabulary) =>
@@ -946,8 +948,9 @@ export default function App() {
       {mode === "adad" && <AdadModule key={roundKey} onBack={goHome} />}
       {mode === "mubtadaKhabar" && <MubtadaKhabarModule key={roundKey} onBack={goHome} />}
       {mode === "adadMadud" && <AdadMadudModule key={roundKey} onBack={goHome} />}
+      {mode === "sunMoon" && <SunMoonLettersModule key={roundKey} onBack={goHome} />}
       {theoryModes.includes(mode as TheoryMode) && <LearningModule key={roundKey} mode={mode as TheoryMode} items={filtered} onBack={goHome} />}
-      {mode !== "home" && mode !== "vocabulary" && mode !== "adad" && mode !== "mubtadaKhabar" && mode !== "adadMadud" && !theoryModes.includes(mode as TheoryMode) && (
+      {mode !== "home" && mode !== "vocabulary" && mode !== "adad" && mode !== "mubtadaKhabar" && mode !== "adadMadud" && mode !== "sunMoon" && !theoryModes.includes(mode as TheoryMode) && (
         <QuizMode
           key={`${mode}-${roundKey}`}
           title={modeLabels[mode].title}
