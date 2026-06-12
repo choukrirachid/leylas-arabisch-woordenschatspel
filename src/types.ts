@@ -3,7 +3,7 @@ import type { VocabularyItem } from "./vocabulary";
 export type Mode =
   | "home" | "vocabulary" | "fourForms" | "definiteness" | "jar"
   | "zarf" | "ishara" | "grammar" | "gender" | "writing" | "exam" | "adad"
-  | "mubtadaKhabar" | "adadMadud" | "sunMoon";
+  | "mubtadaKhabar" | "adadMadud" | "sunMoon" | "mudafMudafIlayhi";
 
 export type Question = {
   id: string;

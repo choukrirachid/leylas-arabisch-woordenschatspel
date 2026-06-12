@@ -382,6 +382,51 @@ button:disabled { cursor: default; }
 .zarf-writing > p { margin: 14px 0; color: var(--purple-dark); font-size: clamp(32px, 6vw, 48px); font-weight: 900; }
 .zarf-writing > small { font-size: 17px; }
 
+.idafa-title { margin-bottom: 8px; }
+.idafa-menu { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.idafa-learn-list, .idafa-example-grid { display: grid; gap: 16px; }
+.idafa-theory-card, .idafa-flashcard, .idafa-writing {
+  padding: 22px;
+  background: white;
+  border: 2px solid var(--line);
+  border-radius: 22px;
+  box-shadow: 0 8px 22px rgba(67,38,111,.06);
+}
+.idafa-theory-card h3 { margin: 0 0 12px; color: var(--purple-dark); font-size: 25px; }
+.idafa-theory-card p { font-size: 19px; line-height: 1.55; }
+.idafa-example { display: grid; gap: 10px; padding: 16px; background: #faf7ff; border-radius: 16px; }
+.idafa-parts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.idafa-parts > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px;
+  background: #f4faf7;
+  border-radius: 14px;
+  text-align: center;
+}
+.idafa-parts b, .idafa-question, .idafa-feedback-answer, .idafa-flashcard .arabic, .idafa-writing .arabic {
+  direction: rtl;
+  font-size: clamp(36px, 6vw, 54px);
+  line-height: 1.5;
+}
+.idafa-parts.large b { font-size: clamp(40px, 7vw, 64px); }
+.idafa-formula { padding: 16px; background: #fff7dc; border-radius: 16px; font-size: 18px; text-align: center; }
+.idafa-kind-grid, .idafa-correct-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.idafa-kind-grid > div, .idafa-correct-grid > div { padding: 15px; background: #f5f7fb; border-radius: 14px; }
+.idafa-correct-grid .good { background: #effaf3; border: 2px solid #68a984; }
+.idafa-correct-grid .wrong { color: inherit; background: #fff4ef; border: 2px solid #d98b76; }
+.idafa-rules { display: grid; gap: 8px; margin: 0; padding-left: 22px; }
+.idafa-all-title { margin-top: 28px; }
+.idafa-flashcard, .idafa-writing { display: grid; gap: 18px; text-align: center; }
+.idafa-dutch-answer { color: var(--purple-dark); font-size: 28px; font-weight: 900; }
+.idafa-mini-analysis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.idafa-mini-analysis > div { padding: 12px; background: #f4faf7; border-radius: 12px; }
+.idafa-question, .idafa-feedback-answer { margin: 12px 0; text-align: center; }
+.idafa-text-option { min-height: 72px; font-size: 18px; }
+.idafa-text-option[dir="rtl"] { font-size: 32px; }
+
 @media (max-width: 650px) {
   .app-shell { padding-inline: 14px; }
   .module-grid, .answer-grid, .practice-choice { grid-template-columns: 1fr; }
@@ -418,6 +463,8 @@ button:disabled { cursor: default; }
   .theory-table-row { min-width: 440px; }
   .sm-example-grid, .sm-compare, .sm-plain-grid { grid-template-columns: 1fr; }
   .zarf-card-grid { grid-template-columns: 1fr; }
+  .idafa-menu, .idafa-parts, .idafa-kind-grid, .idafa-correct-grid, .idafa-mini-analysis { grid-template-columns: 1fr; }
+  .idafa-theory-card, .idafa-flashcard, .idafa-writing { padding: 16px; }
 }
 
 @media (orientation: landscape) and (min-width: 700px) {
