@@ -158,7 +158,7 @@ function DefinitenessTheory({ onBack }: { onBack: () => void }) {
 
 function JarTheory({ onBack }: { onBack: () => void }) {
   return (
-    <TheoryLayout eyebrow="Ism madjroor" title="Ḥarf jar en ism majrūr" onBack={onBack}>
+    <TheoryLayout eyebrow="Harfo Djar" title="Ḥarf jar en ism majrūr" onBack={onBack}>
       <TheoryCard title="فِي en عَلَى">
         <p><strong>فِي</strong> betekent “in”. <strong>عَلَى</strong> betekent “op”. Deze woorden zijn <strong>حَرْف جَرّ</strong>.</p>
         <p>Na een حَرْف جَرّ komt een <strong>اِسْم مَجْرُور</strong>.</p>
