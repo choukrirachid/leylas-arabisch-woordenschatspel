@@ -7,6 +7,7 @@ import {
   contextMetadataIsSafe,
   type ContextualPhraseTemplate,
 } from "./contextualPhrases";
+import { DarfMakaanModule } from "./DarfMakaanModule";
 import { DualPracticeMode } from "./DualPracticeMode";
 import { grammarWords } from "./grammarWords";
 import { MubtadaKhabarModule } from "./MubtadaKhabarModule";
@@ -771,7 +772,7 @@ function VocabularyMode({ items, onBack }: { items: VocabularyItem[]; onBack: ()
 }
 
 const theoryModes: TheoryMode[] = [
-  "fourForms", "definiteness", "jar", "zarf", "ishara", "grammar", "gender", "writing",
+  "fourForms", "definiteness", "jar", "ishara", "grammar", "gender", "writing",
 ];
 
 function LearningModule({
@@ -971,8 +972,9 @@ export default function App() {
       {mode === "mubtadaKhabar" && <MubtadaKhabarModule key={roundKey} onBack={goHome} />}
       {mode === "adadMadud" && <AdadMadudModule key={roundKey} onBack={goHome} />}
       {mode === "sunMoon" && <SunMoonLettersModule key={roundKey} onBack={goHome} />}
+      {mode === "zarf" && <DarfMakaanModule key={roundKey} onBack={goHome} />}
       {theoryModes.includes(mode as TheoryMode) && <LearningModule key={roundKey} mode={mode as TheoryMode} items={filtered} onBack={goHome} />}
-      {mode !== "home" && mode !== "vocabulary" && mode !== "adad" && mode !== "mubtadaKhabar" && mode !== "adadMadud" && mode !== "sunMoon" && !theoryModes.includes(mode as TheoryMode) && (
+      {mode !== "home" && mode !== "vocabulary" && mode !== "adad" && mode !== "mubtadaKhabar" && mode !== "adadMadud" && mode !== "sunMoon" && mode !== "zarf" && !theoryModes.includes(mode as TheoryMode) && (
         <QuizMode
           key={`${mode}-${roundKey}`}
           title={modeLabels[mode].title}

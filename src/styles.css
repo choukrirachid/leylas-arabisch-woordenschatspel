@@ -347,6 +347,40 @@ button:disabled { cursor: default; }
 .sm-writing { text-align: center; }
 .sm-writing h3 { margin: 0; font-size: 30px; }
 .sm-writing > .arabic { display: block; margin: 18px 0; text-align: center; font-size: clamp(58px, 11vw, 84px); }
+.zarf-title h2 { font-size: clamp(30px, 5vw, 44px); }
+.zarf-menu .module-card { min-height: 122px; }
+.zarf-learn-list { display: grid; gap: 18px; }
+.zarf-theory-card, .zarf-learn-card {
+  padding: 22px;
+  background: white;
+  border: 2px solid var(--line);
+  border-radius: 22px;
+  box-shadow: 0 8px 22px rgba(67,38,111,.06);
+}
+.zarf-theory-card h3 { margin: 0 0 12px; color: var(--purple-dark); font-size: 25px; }
+.zarf-theory-card p { font-size: 19px; line-height: 1.55; }
+.zarf-card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.zarf-learn-card { display: flex; flex-direction: column; align-items: center; gap: 7px; text-align: center; }
+.zarf-learn-card > .arabic { text-align: center; font-size: clamp(48px, 8vw, 64px); }
+.zarf-learn-card > strong { color: var(--purple-dark); font-size: 24px; }
+.zarf-example { width: 100%; margin-top: 8px; padding: 14px; background: #faf7ff; border-radius: 15px; }
+.zarf-example .arabic { display: block; text-align: center; font-size: 38px; }
+.zarf-learn-card small { font-size: 16px; line-height: 1.45; }
+.zarf-learn-card small .arabic { display: inline; font-size: 24px; }
+.zarf-flashcard { text-align: center; }
+.zarf-flashcard > p { font-size: 19px; font-weight: 800; }
+.zarf-flashcard > h3 { font-size: clamp(42px, 8vw, 64px); }
+.zarf-flashcard > h3.arabic { text-align: center; font-size: clamp(62px, 12vw, 92px); }
+.zarf-dutch-answer, .zarf-feedback-answer { display: block; margin: 12px 0; color: var(--purple-dark); font-size: 34px; }
+.zarf-question { margin-bottom: 18px; padding: 25px; text-align: center; background: white; border: 2px solid var(--line); border-radius: 22px; }
+.zarf-question h3 { margin: 0; color: var(--purple-dark); font-size: clamp(29px, 5vw, 43px); line-height: 1.4; }
+.zarf-question h3.arabic { text-align: center; font-size: clamp(48px, 9vw, 70px); }
+.zarf-question > .arabic { margin: 10px 0 0; text-align: center; font-size: clamp(42px, 8vw, 62px); }
+.zarf-text-option { text-align: center; font-size: 23px; font-weight: 900; }
+.zarf-writing { text-align: center; }
+.zarf-writing h3 { margin: 0; font-size: clamp(27px, 5vw, 38px); }
+.zarf-writing > p { margin: 14px 0; color: var(--purple-dark); font-size: clamp(32px, 6vw, 48px); font-weight: 900; }
+.zarf-writing > small { font-size: 17px; }
 
 @media (max-width: 650px) {
   .app-shell { padding-inline: 14px; }
@@ -383,6 +417,7 @@ button:disabled { cursor: default; }
   .theory-table { overflow-x: auto; }
   .theory-table-row { min-width: 440px; }
   .sm-example-grid, .sm-compare, .sm-plain-grid { grid-template-columns: 1fr; }
+  .zarf-card-grid { grid-template-columns: 1fr; }
 }
 
 @media (orientation: landscape) and (min-width: 700px) {
