@@ -21,7 +21,7 @@ export const contextualPhrases: ContextualPhraseTemplate[] = [
   { id: "bike-beside-house", dutch: "de fiets is naast het huis", arabic: "الدَّرَّاجَةُ بِجَانِبِ الْبَيْتِ", grammarFocus: "zarf_makaan" },
   { id: "car-in-front-of-house", dutch: "de auto is voor het huis", arabic: "السَّيَّارَةُ أَمَامَ الْبَيْتِ", grammarFocus: "zarf_makaan" },
   { id: "tree-behind-house", dutch: "de boom is achter het huis", arabic: "الشَّجَرَةُ خَلْفَ الْبَيْتِ", grammarFocus: "zarf_makaan" },
-  { id: "flower-beside-tree", dutch: "de bloem is naast de boom", arabic: "الزَّهْرَةُ بِجَانِبِ الشَّجَرَةِ", grammarFocus: "zarf_makaan" },
+  { id: "flower-beside-tree", dutch: "de bloem is naast de boom", arabic: "الْوَرْدَةُ بِجَانِبِ الشَّجَرَةِ", grammarFocus: "zarf_makaan" },
 ];
 
 export const canUseAsLocation = (item: VocabularyItem): boolean =>
