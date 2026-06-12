@@ -58,19 +58,41 @@ const categoryLabels: Record<"all" | Category, string> = {
 const modeLabels: Record<Exclude<Mode, "home">, { title: string; subtitle: string }> = {
   vocabulary: { title: "Woordenschat", subtitle: "Tik, kijk en kies het juiste woord." },
   fourForms: { title: "Vier vormen", subtitle: "Enkelvoud, meervoud, bepaald en onbepaald." },
+  sunMoon: { title: "Zonneletters / maanletters", subtitle: "Leer الحروف الشمسية والقمرية herkennen." },
   definiteness: { title: "Bepaald / onbepaald", subtitle: "Oefen مَعْرِفَة en نَكِرَة." },
   jar: { title: "Ism madjroor", subtitle: "Na فِي en عَلَى volgt een اِسْم مَجْرُور." },
   zarf: { title: "Darf makaan", subtitle: "Oefen ظَرْف مَكَان met bekende woorden." },
   ishara: { title: "Asmaa al ishara", subtitle: "Kies هَٰذَا of هَٰذِهِ." },
   grammar: { title: "Grammatica herkennen", subtitle: "Herken اِسْم, فِعْل en حَرْف." },
   gender: { title: "Mannelijk / vrouwelijk", subtitle: "Oefen مُذَكَّر en مُؤَنَّث." },
-  writing: { title: "Schrijfexamen", subtitle: "Schrijf op papier en controleer jezelf." },
-  exam: { title: "Examenmodus", subtitle: "Twintig gemengde vragen." },
   adad: { title: "ʿAdad / Getallen", subtitle: "Leer de mannelijke en vrouwelijke vormen van 1 t/m 10." },
   mubtadaKhabar: { title: "Mubtadaʾ / Khabar", subtitle: "Leer de جُمْلَة اِسْمِيَّة stap voor stap analyseren." },
   adadMadud: { title: "ʿAdad wa Maʿdūd", subtitle: "Getal en geteld woord." },
-  sunMoon: { title: "Zonneletters / maanletters", subtitle: "Leer الحروف الشمسية والقمرية herkennen." },
+  writing: { title: "Schrijfexamen", subtitle: "Schrijf op papier en controleer jezelf." },
+  exam: { title: "Examenmodus", subtitle: "Twintig gemengde vragen." },
 };
+
+type HomeModuleMode = Exclude<Mode, "home">;
+
+const preferredModuleOrder: Partial<Record<HomeModuleMode, number>> = {
+  vocabulary: 1,
+  fourForms: 2,
+  sunMoon: 3,
+  definiteness: 4,
+  jar: 5,
+  zarf: 6,
+  ishara: 7,
+  grammar: 8,
+  gender: 9,
+  adad: 10,
+  mubtadaKhabar: 11,
+  adadMadud: 12,
+  writing: 998,
+  exam: 999,
+};
+
+const homeModules = (Object.entries(modeLabels) as [HomeModuleMode, { title: string; subtitle: string }][])
+  .sort(([left], [right]) => (preferredModuleOrder[left] ?? 500) - (preferredModuleOrder[right] ?? 500));
 
 const arabicForms = (items = vocabulary) =>
   items.flatMap((item) => [
@@ -323,7 +345,7 @@ function HomeScreen({
       </header>
       <CategoryFilter value={category} onChange={onCategory} />
       <section className="module-grid" aria-label="Oefenmodules">
-        {(Object.entries(modeLabels) as [Exclude<Mode, "home">, { title: string; subtitle: string }][]).map(([key, info], index) => (
+        {homeModules.map(([key, info], index) => (
           <button className="module-card" key={key} onClick={() => onStart(key)}>
             <span className="module-number">{index + 1}</span>
             <span><strong>{info.title}</strong><small>{info.subtitle}</small></span>
