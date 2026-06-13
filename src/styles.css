@@ -427,6 +427,91 @@ button:disabled { cursor: default; }
 .idafa-text-option { min-height: 72px; font-size: 18px; }
 .idafa-text-option[dir="rtl"] { font-size: 32px; }
 
+.reading-title { margin-bottom: 12px; }
+.reading-intro { margin: 0 0 18px; text-align: center; font-size: 19px; }
+.reading-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.reading-list-card { min-height: 116px; }
+.reading-list-card small.arabic { margin-top: 5px; font-size: 25px; line-height: 1.5; }
+.reading-passage {
+  padding: 24px;
+  background: white;
+  border: 2px solid var(--line);
+  border-radius: 24px;
+  box-shadow: 0 8px 22px rgba(67,38,111,.06);
+}
+.reading-passage > h3 { margin: 0 0 10px; color: var(--purple-dark); font-size: 25px; }
+.reading-arabic-title { display: block; margin-bottom: 18px; text-align: center; font-size: clamp(38px, 6vw, 54px); }
+.reading-paragraphs { display: grid; gap: 18px; }
+.reading-paragraphs p {
+  margin: 0;
+  padding: 18px;
+  background: #faf7ff;
+  border-radius: 17px;
+  font-size: clamp(34px, 5vw, 44px);
+  line-height: 2;
+  text-align: right;
+}
+.reading-words { margin-top: 16px; }
+.reading-words-toggle { min-height: 58px; }
+.reading-word-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 18px;
+  background: white;
+  border: 2px solid var(--line);
+  border-radius: 18px;
+}
+.reading-word-list h3 { margin: 0 0 6px; color: var(--purple-dark); }
+.reading-word-list > div {
+  display: grid;
+  grid-template-columns: minmax(150px, .7fr) 1fr;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 12px;
+  background: #f4faf7;
+  border-radius: 12px;
+}
+.reading-word-list .arabic { text-align: right; font-size: 32px; }
+.reading-start { min-height: 60px; margin-top: 16px; }
+.reading-question-card {
+  padding: 24px;
+  background: white;
+  border: 2px solid var(--line);
+  border-radius: 22px;
+}
+.reading-question-card > h3 {
+  margin: 0 0 22px;
+  text-align: center;
+  font-size: clamp(24px, 4vw, 34px);
+  line-height: 1.55;
+}
+.reading-question-card > h3.arabic { font-size: clamp(34px, 6vw, 48px); line-height: 1.8; }
+.reading-answers .answer-option { min-height: 82px; }
+.reading-answers .answer-option.arabic { font-size: clamp(27px, 4vw, 36px); line-height: 1.6; }
+.reading-feedback > b { display: block; margin: 10px 0; font-size: 25px; }
+.reading-feedback > b.arabic { font-size: 38px; }
+.reading-between {
+  padding: 28px;
+  background: white;
+  border: 2px solid var(--line);
+  border-radius: 22px;
+  text-align: center;
+}
+.reading-between h3 { color: var(--purple-dark); font-size: 31px; }
+.reading-between p:not(.eyebrow) { font-size: 19px; }
+.reading-score-grid { display: grid; gap: 12px; margin: 18px 0; }
+.reading-score-grid > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 18px;
+  background: #f4faf7;
+  border-radius: 14px;
+  font-size: 18px;
+}
+.reading-score-grid strong { color: var(--purple-dark); font-size: 25px; }
+
 @media (max-width: 650px) {
   .app-shell { padding-inline: 14px; }
   .module-grid, .answer-grid, .practice-choice { grid-template-columns: 1fr; }
@@ -465,6 +550,10 @@ button:disabled { cursor: default; }
   .zarf-card-grid { grid-template-columns: 1fr; }
   .idafa-menu, .idafa-parts, .idafa-kind-grid, .idafa-correct-grid, .idafa-mini-analysis { grid-template-columns: 1fr; }
   .idafa-theory-card, .idafa-flashcard, .idafa-writing { padding: 16px; }
+  .reading-list { grid-template-columns: 1fr; }
+  .reading-passage, .reading-question-card { padding: 15px; }
+  .reading-paragraphs p { padding: 14px; font-size: 34px; }
+  .reading-word-list > div { grid-template-columns: 1fr; gap: 3px; }
 }
 
 @media (orientation: landscape) and (min-width: 700px) {

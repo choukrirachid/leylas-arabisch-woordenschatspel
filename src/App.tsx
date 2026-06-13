@@ -12,6 +12,7 @@ import { DualPracticeMode } from "./DualPracticeMode";
 import { grammarWords } from "./grammarWords";
 import { MubtadaKhabarModule } from "./MubtadaKhabarModule";
 import { MudafMudafIlayhiModule } from "./MudafMudafIlayhiModule";
+import { ReadingComprehensionModule } from "./ReadingComprehensionModule";
 import { SunMoonLettersModule } from "./SunMoonLettersModule";
 import { TheoryPage, VocabularyTheory, type TheoryMode } from "./TheoryPages";
 import type { Mistake, Mode, Question } from "./types";
@@ -71,6 +72,7 @@ const modeLabels: Record<Exclude<Mode, "home">, { title: string; subtitle: strin
   mubtadaKhabar: { title: "Mubtadaʾ / Khabar", subtitle: "Leer de جُمْلَة اِسْمِيَّة stap voor stap analyseren." },
   adadMadud: { title: "ʿAdad wa Maʿdūd", subtitle: "Getal en geteld woord." },
   mudafMudafIlayhi: { title: "Muḍāf / Muḍāf ilayhi", subtitle: "Leer المضاف والمضاف إليه eenvoudig herkennen." },
+  readingComprehension: { title: "Begrijpend lezen", subtitle: "Lees korte Arabische teksten en beantwoord vragen." },
   writing: { title: "Schrijfexamen", subtitle: "Schrijf op papier en controleer jezelf." },
   exam: { title: "Examenmodus", subtitle: "Twintig gemengde vragen." },
 };
@@ -91,6 +93,7 @@ const preferredModuleOrder: Partial<Record<HomeModuleMode, number>> = {
   mubtadaKhabar: 11,
   adadMadud: 12,
   mudafMudafIlayhi: 13,
+  readingComprehension: 14,
   writing: 998,
   exam: 999,
 };
@@ -977,8 +980,9 @@ export default function App() {
       {mode === "sunMoon" && <SunMoonLettersModule key={roundKey} onBack={goHome} />}
       {mode === "zarf" && <DarfMakaanModule key={roundKey} onBack={goHome} />}
       {mode === "mudafMudafIlayhi" && <MudafMudafIlayhiModule key={roundKey} onBack={goHome} />}
+      {mode === "readingComprehension" && <ReadingComprehensionModule key={roundKey} onBack={goHome} />}
       {theoryModes.includes(mode as TheoryMode) && <LearningModule key={roundKey} mode={mode as TheoryMode} items={filtered} onBack={goHome} />}
-      {mode !== "home" && mode !== "vocabulary" && mode !== "adad" && mode !== "mubtadaKhabar" && mode !== "adadMadud" && mode !== "sunMoon" && mode !== "zarf" && mode !== "mudafMudafIlayhi" && !theoryModes.includes(mode as TheoryMode) && (
+      {mode !== "home" && mode !== "vocabulary" && mode !== "adad" && mode !== "mubtadaKhabar" && mode !== "adadMadud" && mode !== "sunMoon" && mode !== "zarf" && mode !== "mudafMudafIlayhi" && mode !== "readingComprehension" && !theoryModes.includes(mode as TheoryMode) && (
         <QuizMode
           key={`${mode}-${roundKey}`}
           title={modeLabels[mode].title}
