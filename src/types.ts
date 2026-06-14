@@ -4,7 +4,7 @@ export type Mode =
   | "home" | "vocabulary" | "fourForms" | "definiteness" | "jar"
   | "zarf" | "ishara" | "grammar" | "gender" | "writing" | "exam" | "adad"
   | "mubtadaKhabar" | "adadMadud" | "sunMoon" | "mudafMudafIlayhi"
-  | "readingComprehension";
+  | "readingComprehension" | "iraabCases";
 
 export type Question = {
   id: string;

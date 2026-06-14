@@ -512,6 +512,87 @@ button:disabled { cursor: default; }
 }
 .reading-score-grid strong { color: var(--purple-dark); font-size: 25px; }
 
+.iraab-title { margin-bottom: 12px; }
+.iraab-menu { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.iraab-menu .module-card:last-child { grid-column: 1 / -1; }
+.iraab-badges {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 0 18px;
+}
+.iraab-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 12px;
+  border: 2px solid transparent;
+  border-radius: 15px;
+}
+.iraab-badge .arabic { font-size: 29px; }
+.iraab-badge.marfoo, .iraab-theory-card.marfoo { background: #eef9f2; border-color: #78b991; }
+.iraab-badge.mansub, .iraab-theory-card.mansub { background: #fff3ec; border-color: #df9b79; }
+.iraab-badge.majroor, .iraab-theory-card.majroor { background: #eef4ff; border-color: #7d9fd4; }
+.iraab-learn-list { display: grid; gap: 16px; }
+.iraab-theory-card {
+  padding: 22px;
+  background: white;
+  border: 2px solid var(--line);
+  border-radius: 22px;
+  box-shadow: 0 8px 22px rgba(67,38,111,.06);
+}
+.iraab-theory-card h3 { margin: 0 0 12px; color: var(--purple-dark); font-size: 25px; }
+.iraab-theory-card p { font-size: 19px; line-height: 1.55; }
+.iraab-example-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 12px 0;
+}
+.iraab-example-row .arabic {
+  padding: 12px;
+  background: rgba(255,255,255,.7);
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  text-align: center;
+  font-size: clamp(35px, 5vw, 47px);
+}
+.iraab-ending {
+  margin: 10px 0;
+  text-align: center;
+  direction: rtl;
+  font-size: clamp(48px, 8vw, 70px);
+  font-weight: 900;
+}
+.iraab-summary { display: grid; gap: 10px; }
+.iraab-summary > div {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 13px;
+  background: #faf7ff;
+  border-radius: 13px;
+  text-align: center;
+  font-size: 22px;
+}
+.iraab-summary .arabic { font-size: 30px; }
+.iraab-question {
+  padding: 24px;
+  background: white;
+  border: 2px solid var(--line);
+  border-radius: 22px;
+  text-align: center;
+}
+.iraab-question h3 { margin: 0 0 14px; font-size: 24px; }
+.iraab-question > .arabic { display: block; font-size: clamp(50px, 9vw, 76px); line-height: 1.6; }
+.iraab-answers .answer-option { min-height: 82px; font-size: 20px; }
+.iraab-answers .answer-option.arabic { font-size: clamp(31px, 5vw, 42px); }
+.iraab-writing { text-align: center; }
+.iraab-writing h3 { font-size: clamp(25px, 4vw, 35px); line-height: 1.55; }
+.iraab-writing .answer-reveal .arabic { font-size: clamp(48px, 9vw, 72px); }
+
 @media (max-width: 650px) {
   .app-shell { padding-inline: 14px; }
   .module-grid, .answer-grid, .practice-choice { grid-template-columns: 1fr; }
@@ -554,6 +635,9 @@ button:disabled { cursor: default; }
   .reading-passage, .reading-question-card { padding: 15px; }
   .reading-paragraphs p { padding: 14px; font-size: 34px; }
   .reading-word-list > div { grid-template-columns: 1fr; gap: 3px; }
+  .iraab-menu, .iraab-badges, .iraab-example-row { grid-template-columns: 1fr; }
+  .iraab-menu .module-card:last-child { grid-column: auto; }
+  .iraab-theory-card, .iraab-question { padding: 16px; }
 }
 
 @media (orientation: landscape) and (min-width: 700px) {
