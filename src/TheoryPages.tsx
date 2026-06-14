@@ -222,21 +222,18 @@ function IsharaTheory({ onBack }: { onBack: () => void }) {
 
 function GrammarTheory({ onBack }: { onBack: () => void }) {
   return (
-    <TheoryLayout eyebrow="Grammatica herkennen" title="Ism, Fiʿl en Ḥarf herkennen" onBack={onBack}>
+    <TheoryLayout eyebrow="Ism, fiʿl en ḥarf" title="Herken اِسْم، فِعْل en حَرْف" onBack={onBack}>
       <TheoryCard title="Drie grote groepen">
         <p>Een <strong>اِسْم</strong> is vaak een ding, persoon, plaats of eigenschap. Een <strong>فِعْل</strong> is een handeling. Een <strong>حَرْف</strong> krijgt betekenis samen met andere woorden.</p>
         <div className="theory-example-grid">
           <ArabicExample arabic="كِتَابٌ" badges={["اِسْم", "naamwoord"]} />
           <ArabicExample arabic="تَكْتُبُ" badges={["فِعْل", "werkwoord"]} />
           <ArabicExample arabic="فِي" badges={["حَرْف", "voorzetsel"]} />
-          <ArabicExample arabic="فَوْقَ" badges={["ظَرْف مَكَان", "plaatswoord"]} />
         </div>
-        <p>Een ظَرْف مَكَان is een plaatswoord. Het is geen gewoon werkwoord en geen ḥarf jar.</p>
         <MiniTable headers={["Type", "Betekenis", "Voorbeeld"]} rows={[
           [<b className="arabic">اِسْم</b>, "naamwoord", <b className="arabic">كِتَابٌ</b>],
           [<b className="arabic">فِعْل</b>, "werkwoord", <b className="arabic">تَكْتُبُ</b>],
           [<b className="arabic">حَرْف</b>, "voorzetsel", <b className="arabic">فِي</b>],
-          [<b className="arabic">ظَرْف مَكَان</b>, "plaatswoord", <b className="arabic">فَوْقَ</b>],
         ]} />
       </TheoryCard>
     </TheoryLayout>

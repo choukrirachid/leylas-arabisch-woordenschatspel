@@ -593,6 +593,104 @@ button:disabled { cursor: default; }
 .iraab-writing h3 { font-size: clamp(25px, 4vw, 35px); line-height: 1.55; }
 .iraab-writing .answer-reveal .arabic { font-size: clamp(48px, 9vw, 72px); }
 
+.word-types-title { margin-bottom: 12px; }
+.word-types-title > p { font-size: 18px; }
+.word-types-badges {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.word-types-badges span {
+  padding: 12px;
+  color: var(--purple-dark);
+  background: #eee6fa;
+  border: 2px solid var(--line);
+  border-radius: 15px;
+  text-align: center;
+  font-size: 34px;
+}
+.word-types-main-menu .module-card { min-height: 138px; }
+.word-types-main-menu small.arabic { margin-top: 5px; font-size: 24px; }
+.word-types-learn-list, .jumla-learn-list { display: grid; gap: 18px; }
+.word-types-theory-card, .jumla-theory-card, .jumla-example-card, .jumla-question, .jumla-writing {
+  padding: 22px;
+  background: white;
+  border: 2px solid var(--line);
+  border-radius: 22px;
+  box-shadow: 0 8px 22px rgba(67,38,111,.06);
+}
+.word-types-theory-card h3, .jumla-theory-card h3 {
+  margin: 0 0 12px;
+  color: var(--purple-dark);
+  font-size: 25px;
+}
+.word-types-theory-card h3 .arabic { margin-right: 6px; font-size: 34px; }
+.word-types-theory-card p, .jumla-theory-card p { font-size: 19px; line-height: 1.55; }
+.word-types-example-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.word-types-example-row .arabic {
+  padding: 14px 8px;
+  background: #faf7ff;
+  border-radius: 14px;
+  text-align: center;
+  font-size: 38px;
+}
+.jumla-menu { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.jumla-menu .module-card:last-child { grid-column: 1 / -1; }
+.jumla-example-card { display: grid; gap: 10px; margin-top: 15px; text-align: center; background: #faf7ff; }
+.jumla-sentence {
+  display: block;
+  text-align: center;
+  font-size: clamp(38px, 7vw, 58px);
+  line-height: 1.8;
+}
+.jumla-analysis, .jumla-answer-reveal { display: grid; gap: 8px; }
+.jumla-analysis > div, .jumla-answer-reveal > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  background: white;
+  border-radius: 13px;
+}
+.jumla-analysis span, .jumla-answer-reveal span { font-weight: 900; }
+.jumla-analysis .arabic, .jumla-answer-reveal .arabic { text-align: center; font-size: 32px; }
+.jumla-more-examples { display: grid; gap: 9px; margin-top: 15px; }
+.jumla-more-examples .arabic {
+  padding: 13px;
+  background: #faf7ff;
+  border-radius: 13px;
+  text-align: center;
+  font-size: 38px;
+  line-height: 1.7;
+}
+.jumla-rule-card { text-align: center; }
+.jumla-rule {
+  margin: 10px 0;
+  padding: 15px;
+  color: #185e45;
+  background: #e3f7ef;
+  border-radius: 15px;
+  font-size: clamp(34px, 6vw, 48px);
+}
+.jumla-question { margin-bottom: 18px; text-align: center; }
+.jumla-question h3 { margin: 0 0 14px; color: var(--purple-dark); font-size: 25px; }
+.jumla-question .word-prompt { display: block; text-align: center; font-size: clamp(54px, 10vw, 78px); }
+.jumla-answers .answer-option { min-height: 82px; }
+.jumla-answers .answer-option.arabic { font-size: clamp(29px, 5vw, 40px); }
+.jumla-text-option { text-align: center; font-size: 20px; font-weight: 900; line-height: 1.4; }
+.jumla-writing { text-align: center; }
+.jumla-writing > p { margin-top: 0; font-size: 21px; font-weight: 900; }
+.jumla-writing ul { display: inline-grid; gap: 5px; margin: 0 auto 16px; text-align: left; font-size: 18px; }
+.jumla-writing > .jumla-sentence { margin-bottom: 18px; }
+.jumla-answer-reveal { margin-bottom: 16px; text-align: left; }
+.jumla-answer-reveal > span { display: block; padding: 12px; text-align: center; font-size: 21px; }
+
 @media (max-width: 650px) {
   .app-shell { padding-inline: 14px; }
   .module-grid, .answer-grid, .practice-choice { grid-template-columns: 1fr; }
@@ -638,6 +736,10 @@ button:disabled { cursor: default; }
   .iraab-menu, .iraab-badges, .iraab-example-row { grid-template-columns: 1fr; }
   .iraab-menu .module-card:last-child { grid-column: auto; }
   .iraab-theory-card, .iraab-question { padding: 16px; }
+  .word-types-badges, .word-types-example-row, .jumla-menu { grid-template-columns: 1fr; }
+  .jumla-menu .module-card:last-child { grid-column: auto; }
+  .word-types-theory-card, .jumla-theory-card, .jumla-question, .jumla-writing { padding: 16px; }
+  .jumla-analysis > div, .jumla-answer-reveal > div { grid-template-columns: 1fr; gap: 2px; text-align: center; }
 }
 
 @media (orientation: landscape) and (min-width: 700px) {

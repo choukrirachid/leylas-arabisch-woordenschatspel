@@ -17,6 +17,7 @@ import { ReadingComprehensionModule } from "./ReadingComprehensionModule";
 import { SunMoonLettersModule } from "./SunMoonLettersModule";
 import { TheoryPage, VocabularyTheory, type TheoryMode } from "./TheoryPages";
 import type { Mistake, Mode, Question } from "./types";
+import { WordTypesModule } from "./WordTypesModule";
 import {
   vocabulary,
   type Category,
@@ -67,7 +68,7 @@ const modeLabels: Record<Exclude<Mode, "home">, { title: string; subtitle: strin
   jar: { title: "Harfo Djar", subtitle: "Na فِي en عَلَى volgt een اِسْم مَجْرُور." },
   zarf: { title: "Darf makaan", subtitle: "Oefen ظَرْف مَكَان met bekende woorden." },
   ishara: { title: "Asmaa al ishara", subtitle: "Kies هَٰذَا of هَٰذِهِ." },
-  grammar: { title: "Grammatica herkennen", subtitle: "Herken اِسْم, فِعْل en حَرْف." },
+  grammar: { title: "Ism, fiʿl en ḥarf", subtitle: "Herken اِسْم، فِعْل en حَرْف" },
   gender: { title: "Mannelijk / vrouwelijk", subtitle: "Oefen مُذَكَّر en مُؤَنَّث." },
   adad: { title: "ʿAdad / Getallen", subtitle: "Leer de mannelijke en vrouwelijke vormen van 1 t/m 10." },
   mubtadaKhabar: { title: "Mubtadaʾ / Khabar", subtitle: "Leer de جُمْلَة اِسْمِيَّة stap voor stap analyseren." },
@@ -246,7 +247,7 @@ const grammarQuestions = (count: number): Question[] => {
       arabic: item.arabicIndefiniteRaf!,
       answer: item.arabicType === "fi3l" ? "فِعْل" : "اِسْم",
     })),
-    ...grammarWords.map((word) => ({
+    ...grammarWords.filter((word) => word.arabicType !== "zarf").map((word) => ({
       id: word.id,
       arabic: word.arabic,
       answer: word.arabicType === "harf" ? "حَرْف" : "اِسْم",
@@ -781,7 +782,7 @@ function VocabularyMode({ items, onBack }: { items: VocabularyItem[]; onBack: ()
 }
 
 const theoryModes: TheoryMode[] = [
-  "fourForms", "definiteness", "jar", "ishara", "grammar", "gender", "writing",
+  "fourForms", "definiteness", "jar", "ishara", "gender", "writing",
 ];
 
 function LearningModule({
@@ -985,8 +986,9 @@ export default function App() {
       {mode === "mudafMudafIlayhi" && <MudafMudafIlayhiModule key={roundKey} onBack={goHome} />}
       {mode === "readingComprehension" && <ReadingComprehensionModule key={roundKey} onBack={goHome} />}
       {mode === "iraabCases" && <IraabCasesModule key={roundKey} onBack={goHome} />}
+      {mode === "grammar" && <WordTypesModule key={roundKey} onBack={goHome} />}
       {theoryModes.includes(mode as TheoryMode) && <LearningModule key={roundKey} mode={mode as TheoryMode} items={filtered} onBack={goHome} />}
-      {mode !== "home" && mode !== "vocabulary" && mode !== "adad" && mode !== "mubtadaKhabar" && mode !== "adadMadud" && mode !== "sunMoon" && mode !== "zarf" && mode !== "mudafMudafIlayhi" && mode !== "readingComprehension" && mode !== "iraabCases" && !theoryModes.includes(mode as TheoryMode) && (
+      {mode !== "home" && mode !== "vocabulary" && mode !== "adad" && mode !== "mubtadaKhabar" && mode !== "adadMadud" && mode !== "sunMoon" && mode !== "zarf" && mode !== "mudafMudafIlayhi" && mode !== "readingComprehension" && mode !== "iraabCases" && mode !== "grammar" && !theoryModes.includes(mode as TheoryMode) && (
         <QuizMode
           key={`${mode}-${roundKey}`}
           title={modeLabels[mode].title}
