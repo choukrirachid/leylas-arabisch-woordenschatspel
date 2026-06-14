@@ -36,7 +36,7 @@ const caseNames: Record<IraabCase, string> = {
   majroor: "Majrūr",
 };
 
-const shuffle = <T,>(items: T[]): T[] => {
+const shuffle = <T,>(items: readonly T[]): T[] => {
   const copy = [...items];
   for (let index = copy.length - 1; index > 0; index -= 1) {
     const other = Math.floor(Math.random() * (index + 1));
