@@ -298,3 +298,133 @@ const writingQuestions = (count: number): Question[] => {
   }));
 };
 
+const makeQuestions = (mode: Exclude<Mode, "home">, items: VocabularyItem[], count = 10): Question[] => {
+  if (mode === "vocabulary") return vocabularyQuestions(items, count);
+  if (mode === "fourForms") return fourFormQuestions(count);
+  if (mode === "definiteness") return definitenessQuestions(count);
+  if (mode === "jar") return jarQuestions(count);
+  if (mode === "zarf") return zarfQuestions(count);
+  if (mode === "ishara") return isharaQuestions(count);
+  if (mode === "grammar") return grammarQuestions(count);
+  if (mode === "gender") return genderQuestions(count);
+  if (mode === "writing") return writingQuestions(count);
+  return shuffleArray([
+    ...vocabularyQuestions(items, 4),
+    ...fourFormQuestions(4),
+    ...definitenessQuestions(3),
+    ...jarQuestions(3),
+    ...zarfQuestions(2),
+    ...isharaQuestions(2),
+    ...grammarQuestions(2),
+  ]);
+};
+
+function CategoryFilter({
+  value,
+  onChange,
+}: {
+  value: "all" | Category;
+  onChange: (category: "all" | Category) => void;
+}) {
+  return (
+    <label className="category-filter">
+      <span>Categorie</span>
+      <select value={value} onChange={(event) => onChange(event.target.value as "all" | Category)}>
+        {Object.entries(categoryLabels).map(([key, label]) => (
+          <option key={key} value={key}>{label}</option>
+        ))}
+      </select>
+    </label>
+  );
+}
+
+function HomeScreen({
+  category,
+  onCategory,
+  onStart,
+}: {
+  category: "all" | Category;
+  onCategory: (category: "all" | Category) => void;
+  onStart: (mode: Exclude<Mode, "home">) => void;
+}) {
+  return (
+    <>
+      <header className="hero">
+        <img
+          className="mefen-logo"
+          src="/leylas-arabisch-woordenschatspel/mefen-logo-colored.svg"
+          alt="Moskee El Fath En Nassr"
+        />
+        <p className="eyebrow">أَهْلًا وَسَهْلًا</p>
+        <h1>MEFEN Arabisch Oefenapp</h1>
+        <span className="level-badge">Niveau 1</span>
+        <p>Oefen rustig, tik op grote antwoorden en leer van elke fout.</p>
+      </header>
+      <CategoryFilter value={category} onChange={onCategory} />
+      <section className="module-grid" aria-label="Oefenmodules">
+        {homeModules.map(([key, info], index) => (
+          <button className="module-card" key={key} onClick={() => onStart(key)}>
+            <span className="module-number">{index + 1}</span>
+            <span><strong>{info.title}</strong><small>{info.subtitle}</small></span>
+          </button>
+        ))}
+      </section>
+    </>
+  );
+}
+
+function ScoreBar({ current, total, score }: { current: number; total: number; score: number }) {
+  const progress = Math.min(100, ((current + 1) / total) * 100);
+  return (
+    <div className="score-wrap">
+      <div className="score-line"><strong>Vraag {Math.min(current + 1, total)}/{total}</strong><span>Score: {score}</span></div>
+      <div className="progress"><span style={{ width: `${progress}%` }} /></div>
+    </div>
+  );
+}
+
+type FlashcardDirection = "nl-ar" | "ar-nl";
+type ArabicFormKind = "indefiniteSingular" | "definiteSingular" | "indefinitePlural" | "definitePlural";
+
+const dutchForArabicForm = (item: VocabularyItem, form: ArabicFormKind): string => {
+  if (form === "indefiniteSingular") return item.dutchIndefiniteSingular;
+  if (form === "definiteSingular") return item.dutchDefiniteSingular ?? "bepaalde Nederlandse vorm ontbreekt";
+  if (form === "indefinitePlural") return item.dutchIndefinitePlural ?? item.dutchIndefiniteSingular;
+  return item.dutchDefinitePlural ?? "bepaalde Nederlandse vorm ontbreekt";
+};
+
+function FlashcardMode({
+  items,
+  direction,
+  onBack,
+}: {
+  items: VocabularyItem[];
+  direction: FlashcardDirection;
+  onBack: () => void;
+}) {
+  const cards = useMemo(() => {
+    const vocabularyCards = items
+      .filter((item) => item.arabicIndefiniteRaf)
+      .map((item) => {
+        const forms = [
+          { kind: "indefiniteSingular" as const, arabic: item.arabicIndefiniteRaf! },
+          item.arabicDefiniteRaf && item.dutchDefiniteSingular
+            ? { kind: "definiteSingular" as const, arabic: item.arabicDefiniteRaf }
+            : undefined,
+          item.arabicIndefinitePluralRaf && item.dutchIndefinitePlural
+            ? { kind: "indefinitePlural" as const, arabic: item.arabicIndefinitePluralRaf }
+            : undefined,
+          item.arabicDefinitePluralRaf && item.dutchDefinitePlural
+            ? { kind: "definitePlural" as const, arabic: item.arabicDefinitePluralRaf }
+            : undefined,
+        ].filter((form): form is { kind: ArabicFormKind; arabic: string } => Boolean(form));
+        return {
+          kind: "vocabulary" as const,
+          item,
+          reverseForm: forms[Math.floor(Math.random() * forms.length)],
+        };
+      });
+    const includeGrammar = items === vocabulary || items.some((item) => item.category === "grammar");
+    const grammarCards = includeGrammar
+      ? grammarWords.map((word) => ({ kind: "grammar" as const, word }))
+      : [];
