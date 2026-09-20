@@ -428,3 +428,580 @@ function FlashcardMode({
     const grammarCards = includeGrammar
       ? grammarWords.map((word) => ({ kind: "grammar" as const, word }))
       : [];
+    return shuffleArray([...vocabularyCards, ...grammarCards]);
+  }, [items, direction]);
+  const [index, setIndex] = useState(0);
+  const [isAnswerVisible, setIsAnswerVisible] = useState(false);
+  const [showDefiniteForms, setShowDefiniteForms] = useState(false);
+  const [showDualForms, setShowDualForms] = useState(false);
+  const card = cards[index % cards.length];
+  if (!card) return <EmptyState onBack={onBack} />;
+
+  const nextCard = () => {
+    setIndex((value) => value + 1);
+    setIsAnswerVisible(false);
+    setShowDefiniteForms(false);
+    setShowDualForms(false);
+  };
+
+  const progressLabel = direction === "nl-ar"
+    ? "Flashcards NL → Arabisch"
+    : "Flashcards Arabisch → NL";
+
+  if (card.kind === "grammar") {
+    const roleLabels = {
+      harf_jar: "حَرْف جَرّ",
+      ism_ishara: "اِسْم إِشَارَة",
+      zarf_makaan: "ظَرْف مَكَان",
+    };
+    const question = direction === "nl-ar" ? card.word.dutch : card.word.arabic;
+    return (
+      <section>
+        <button className="back-link" onClick={onBack}>← Terug naar start</button>
+        <div className="screen-title"><p>{progressLabel} • {index + 1}/{cards.length}</p><h2>Wat betekent dit?</h2></div>
+        <article className="flashcard">
+          <h3 className={direction === "ar-nl" ? "arabic flashcard-question" : undefined}>{question}</h3>
+          {isAnswerVisible && (
+            <>
+              <div className="flashcard-row">
+                <span>{direction === "nl-ar" ? "Arabisch" : "Nederlands"}</span>
+                {direction === "nl-ar"
+                  ? <b className="arabic">{card.word.arabic}</b>
+                  : <b>{card.word.dutch}</b>}
+              </div>
+              <div className="flashcard-row"><span>Grammaticale rol</span><b className="arabic role">{roleLabels[card.word.grammarRole]}</b></div>
+            </>
+          )}
+        </article>
+        {!isAnswerVisible
+          ? <button className="primary full" onClick={() => setIsAnswerVisible(true)}>Toon antwoord</button>
+          : <button className="primary full" onClick={nextCard}>Volgende woord</button>}
+      </section>
+    );
+  }
+
+  const item = card.item;
+  const isVerb = item.arabicType === "fi3l";
+  const isNumber = item.category === "numbers";
+  const hasDefiniteStep = !isVerb && !isNumber && item.hasDefiniteForm && Boolean(item.arabicDefiniteRaf);
+  const hasDualStep = !isVerb && !isNumber && Boolean(item.arabicDualRaf && item.dutchDual);
+  const typeLabel = isVerb ? "فِعْل" : "اِسْم";
+  const genderLabel = item.gender === "mudhakkar" ? "مُذَكَّر" : item.gender === "muannath" ? "مُؤَنَّث" : undefined;
+
+  if (direction === "ar-nl") {
+    const formLabels: Record<ArabicFormKind, string> = {
+      indefiniteSingular: "onbepaald enkelvoud",
+      definiteSingular: "bepaald enkelvoud",
+      indefinitePlural: "onbepaald meervoud",
+      definitePlural: "bepaald meervoud",
+    };
+    return (
+      <section>
+        <button className="back-link" onClick={onBack}>← Terug naar start</button>
+        <div className="screen-title"><p>{progressLabel} • {index + 1}/{cards.length}</p><h2>Wat betekent dit?</h2></div>
+        <article className="flashcard">
+          <h3 className="arabic flashcard-question">{card.reverseForm.arabic}</h3>
+          {isAnswerVisible && (
+            <>
+              <div className="flashcard-row"><span>Nederlands</span><b>{dutchForArabicForm(item, card.reverseForm.kind)}</b></div>
+              {!isVerb && !isNumber && <div className="flashcard-row"><span>Vorm</span><b>{formLabels[card.reverseForm.kind]}</b></div>}
+              <div className="flashcard-row"><span>Type</span><b className="arabic role">{typeLabel}</b></div>
+              {genderLabel && !isVerb && <div className="flashcard-row"><span>Geslacht</span><b className="arabic role">{genderLabel}</b></div>}
+            </>
+          )}
+        </article>
+        {!isAnswerVisible
+          ? <button className="primary full" onClick={() => setIsAnswerVisible(true)}>Toon antwoord</button>
+          : <button className="primary full" onClick={nextCard}>Volgende woord</button>}
+      </section>
+    );
+  }
+
+  return (
+    <section>
+      <button className="back-link" onClick={onBack}>← Terug naar start</button>
+      <div className="screen-title">
+        <p>{progressLabel} • {index + 1}/{cards.length}</p>
+        <h2>{!isAnswerVisible ? "Wat is het Arabische woord?" : showDefiniteForms ? "Bepaalde vormen" : showDualForms ? "Tweevoud" : "Onbepaalde vormen"}</h2>
+      </div>
+      <article className="flashcard">
+        <h3>{item.dutchIndefiniteSingular}</h3>
+        {isAnswerVisible && (
+          <>
+            <div className="flashcard-row"><span>{isVerb || isNumber ? "Arabisch" : "Onbepaald"}</span><b className="arabic">{item.arabicIndefiniteRaf}</b></div>
+            {!isVerb && !isNumber && item.hasPlural && item.arabicIndefinitePluralRaf && (
+              <div className="flashcard-row"><span>Meervoud</span><b className="arabic">{item.arabicIndefinitePluralRaf}</b></div>
+            )}
+            {showDualForms && (
+              <>
+                <div className="flashcard-row dual"><span>Tweevoud</span><b className="arabic">{item.arabicDualRaf}</b></div>
+                <div className="flashcard-row dual"><span>Nederlands</span><b>{item.dutchDual}</b></div>
+              </>
+            )}
+            {(isVerb || isNumber) && <div className="flashcard-row"><span>Grammaticaal type</span><b className="arabic role">{typeLabel}</b></div>}
+            {showDefiniteForms && (
+              <>
+                <div className="flashcard-row definite"><span>Bepaald</span><b className="arabic">{item.arabicDefiniteRaf}</b></div>
+                {item.hasPlural && item.arabicDefinitePluralRaf && (
+                  <div className="flashcard-row definite"><span>Bepaald meervoud</span><b className="arabic">{item.arabicDefinitePluralRaf}</b></div>
+                )}
+              </>
+            )}
+          </>
+        )}
+      </article>
+      {!isAnswerVisible
+        ? <button className="primary full" onClick={() => setIsAnswerVisible(true)}>Toon antwoord</button>
+        : hasDualStep && !showDualForms
+          ? <button className="primary full" onClick={() => setShowDualForms(true)}>Toon tweevoud</button>
+        : hasDefiniteStep && !showDefiniteForms
+          ? <button className="primary full" onClick={() => setShowDefiniteForms(true)}>Toon bepaalde vormen</button>
+        : <button className="primary full" onClick={nextCard}>Volgende woord</button>}
+    </section>
+  );
+}
+
+type ListCategory = "all" | Category;
+type ListArabicType = "all" | "ism" | "fi3l" | "harf" | "zarf";
+type ListGender = "all" | "mudhakkar" | "muannath";
+
+const typeLabels: Record<Exclude<ListArabicType, "all">, string> = {
+  ism: "اِسْم",
+  fi3l: "فِعْل",
+  harf: "حَرْف",
+  zarf: "ظَرْف",
+};
+
+const genderLabels = {
+  mudhakkar: "مُذَكَّر",
+  muannath: "مُؤَنَّث",
+};
+
+const grammarRoleLabels = {
+  harf_jar: "حَرْف جَرّ",
+  ism_ishara: "اِسْم إِشَارَة",
+  zarf_makaan: "ظَرْف مَكَان",
+};
+
+function VocabularyListMode() {
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState<ListCategory>("all");
+  const [arabicType, setArabicType] = useState<ListArabicType>("all");
+  const [gender, setGender] = useState<ListGender>("all");
+  const [expandedDefiniteForms, setExpandedDefiniteForms] = useState<Record<string, boolean>>({});
+  const [expandedDualForms, setExpandedDualForms] = useState<Record<string, boolean>>({});
+
+  const entries = useMemo(() => {
+    const vocabularyEntries = vocabulary.map((item) => ({
+      kind: "vocabulary" as const,
+      id: item.id,
+      dutch: [
+        item.dutchIndefiniteSingular,
+        item.dutchDefiniteSingular,
+        item.dutchIndefinitePlural,
+        item.dutchDefinitePlural,
+        item.dutchDual,
+      ].filter(Boolean).join(" "),
+      arabic: [
+        item.arabicIndefiniteRaf,
+        item.arabicDefiniteRaf,
+        item.arabicIndefinitePluralRaf,
+        item.arabicDefinitePluralRaf,
+        item.arabicDualRaf,
+        item.arabicDualJarr,
+      ].filter(Boolean).join(" "),
+      category: item.category,
+      arabicType: item.arabicType,
+      gender: item.gender,
+      item,
+    }));
+    const grammarEntries = grammarWords.map((word) => ({
+      kind: "grammar" as const,
+      id: `grammar-${word.id}`,
+      dutch: word.dutch,
+      arabic: word.arabic,
+      category: "grammar" as const,
+      arabicType: word.arabicType,
+      gender: word.gender ?? "none",
+      word,
+    }));
+    const normalizedSearch = search.trim().toLocaleLowerCase("nl");
+    return [...vocabularyEntries, ...grammarEntries].filter((entry) => {
+      const matchesSearch = !normalizedSearch
+        || entry.dutch.toLocaleLowerCase("nl").includes(normalizedSearch)
+        || entry.arabic.includes(search.trim());
+      return matchesSearch
+        && (category === "all" || entry.category === category)
+        && (arabicType === "all" || entry.arabicType === arabicType)
+        && (gender === "all" || entry.gender === gender);
+    });
+  }, [search, category, arabicType, gender]);
+
+  const Field = ({ label, value }: { label: string; value?: string }) => value ? (
+    <div className="word-list-row">
+      <span>{label}</span>
+      <b className="arabic" dir="rtl">{value}</b>
+    </div>
+  ) : null;
+
+  return (
+    <>
+      <div className="list-filters">
+        <label className="search-field">
+          <span>Zoeken</span>
+          <input
+            type="search"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Zoek Nederlands of Arabisch..."
+          />
+        </label>
+        <label><span>Categorie</span><select value={category} onChange={(event) => setCategory(event.target.value as ListCategory)}>
+          {Object.entries(categoryLabels)
+            .filter(([key]) => key !== "adjectives")
+            .map(([key, label]) => <option key={key} value={key}>{label}</option>)}
+        </select></label>
+        <label><span>Type</span><select value={arabicType} onChange={(event) => setArabicType(event.target.value as ListArabicType)}>
+          <option value="all">Alles</option>
+          <option value="ism">اِسْم</option>
+          <option value="fi3l">فِعْل</option>
+          <option value="harf">حَرْف</option>
+          <option value="zarf">ظَرْف</option>
+        </select></label>
+        <label><span>Geslacht</span><select value={gender} onChange={(event) => setGender(event.target.value as ListGender)}>
+          <option value="all">Alles</option>
+          <option value="mudhakkar">مُذَكَّر</option>
+          <option value="muannath">مُؤَنَّث</option>
+        </select></label>
+      </div>
+      <p className="list-count">{entries.length} woorden gevonden</p>
+      <div className="word-list">
+        {entries.map((entry) => {
+          if (entry.kind === "grammar") {
+            return (
+              <article className="word-list-card" key={entry.id}>
+                <section><h3>Nederlands</h3><p className="dutch-word">{entry.word.dutch}</p></section>
+                <section><h3>Arabisch</h3><b className="arabic main-form">{entry.word.arabic}</b></section>
+                <section><h3>Grammatica</h3>
+                  <Field label="Type" value={typeLabels[entry.word.arabicType]} />
+                  <Field label="Rol" value={grammarRoleLabels[entry.word.grammarRole]} />
+                  <div className="word-list-meta"><span>Categorie</span><b>Grammatica</b></div>
+                </section>
+              </article>
+            );
+          }
+          const item = entry.item;
+          const isSimple = item.arabicType === "fi3l" || item.category === "numbers";
+          const canShowDefinite = !isSimple && Boolean(item.arabicDefiniteRaf);
+          const canShowDual = !isSimple && Boolean(item.arabicDualRaf && item.dutchDual);
+          const definiteIsExpanded = Boolean(expandedDefiniteForms[item.id]);
+          const dualIsExpanded = Boolean(expandedDualForms[item.id]);
+          return (
+            <article className="word-list-card" key={entry.id}>
+              <section><h3>Nederlands</h3>
+                <p className="dutch-word">{item.dutchIndefiniteSingular}</p>
+                {item.dutchIndefinitePlural && <p className="dutch-plural">Meervoud: {item.dutchIndefinitePlural}</p>}
+              </section>
+              <section><h3>Arabisch</h3>
+                <Field label={isSimple ? "Arabisch" : "Enkelvoud"} value={item.arabicIndefiniteRaf} />
+                {!isSimple && <Field label="Meervoud" value={item.arabicIndefinitePluralRaf} />}
+                {canShowDefinite && (
+                  <button
+                    className="definite-toggle"
+                    aria-expanded={definiteIsExpanded}
+                    onClick={() => setExpandedDefiniteForms((current) => ({
+                      ...current,
+                      [item.id]: !current[item.id],
+                    }))}
+                  >
+                    {definiteIsExpanded ? "Verberg bepaalde vormen" : "Toon bepaalde vormen"}
+                  </button>
+                )}
+                {canShowDual && (
+                  <button
+                    className="definite-toggle dual-toggle"
+                    aria-expanded={dualIsExpanded}
+                    onClick={() => setExpandedDualForms((current) => ({
+                      ...current,
+                      [item.id]: !current[item.id],
+                    }))}
+                  >
+                    {dualIsExpanded ? "Verberg tweevoud" : "Toon tweevoud"}
+                  </button>
+                )}
+              </section>
+              {definiteIsExpanded && (
+                <section className="definite-section"><h3>Bepaalde vormen</h3>
+                  <Field label="Bepaald" value={item.arabicDefiniteRaf} />
+                  <Field label="Bepaald meervoud" value={item.arabicDefinitePluralRaf} />
+                </section>
+              )}
+              {dualIsExpanded && (
+                <section className="dual-section"><h3>Tweevoud</h3>
+                  <div className="word-list-meta"><span>Nederlands</span><b>{item.dutchDual}</b></div>
+                  <Field label="Arabisch" value={item.arabicDualRaf} />
+                  <Field label="Na فِي / عَلَى" value={item.arabicDualJarr} />
+                </section>
+              )}
+              <section><h3>Grammatica</h3>
+                <Field label="Type" value={typeLabels[item.arabicType]} />
+                {item.gender !== "none" && <Field label="Geslacht" value={genderLabels[item.gender]} />}
+                <div className="word-list-meta"><span>Categorie</span><b>{categoryLabels[item.category]}</b></div>
+              </section>
+            </article>
+          );
+        })}
+        {!entries.length && <div className="no-results">Geen woorden gevonden. Pas de filters aan.</div>}
+      </div>
+    </>
+  );
+}
+
+function VocabularyMode({ items, onBack }: { items: VocabularyItem[]; onBack: () => void }) {
+  const [activeVocabularyTab, setActiveVocabularyTab] = useState<"learn" | "practice" | "list">("learn");
+  const [style, setStyle] = useState<"choose" | FlashcardDirection | "quiz" | "dual">("choose");
+  const dualExample = items.find((item) => item.arabicDualRaf && item.arabicDualJarr);
+  if (style === "nl-ar" || style === "ar-nl") {
+    return <FlashcardMode items={items} direction={style} onBack={() => setStyle("choose")} />;
+  }
+  if (style === "dual") return <DualPracticeMode items={vocabulary} onBack={() => setStyle("choose")} />;
+  if (style === "quiz") return <QuizMode title="Woordenschat • meerkeuze" initialQuestions={vocabularyQuestions(items, 10)} onBack={() => setStyle("choose")} />;
+  return (
+    <section>
+      <button className="back-link" onClick={onBack}>← Terug naar start</button>
+      <div className="screen-title"><p>Woordenschat</p><h2>{activeVocabularyTab === "learn" ? "Woordenschat leren" : activeVocabularyTab === "practice" ? "Hoe wil je oefenen?" : "Woordenlijst"}</h2></div>
+      <div className="vocabulary-tabs" role="tablist" aria-label="Woordenschatweergave">
+        <button role="tab" aria-selected={activeVocabularyTab === "learn"} className={activeVocabularyTab === "learn" ? "active" : ""} onClick={() => setActiveVocabularyTab("learn")}>Leren</button>
+        <button role="tab" aria-selected={activeVocabularyTab === "practice"} className={activeVocabularyTab === "practice" ? "active" : ""} onClick={() => setActiveVocabularyTab("practice")}>Oefenen</button>
+        <button role="tab" aria-selected={activeVocabularyTab === "list"} className={activeVocabularyTab === "list" ? "active" : ""} onClick={() => setActiveVocabularyTab("list")}>Woordenlijst</button>
+      </div>
+      {activeVocabularyTab === "learn" ? <VocabularyTheory onOpenList={() => setActiveVocabularyTab("list")} /> : activeVocabularyTab === "practice" ? (
+        <div className="practice-choice">
+          <button className="module-card" onClick={() => setStyle("nl-ar")}><span className="module-number">A</span><span><strong>Nederlands → Arabisch</strong><small>Lees het Nederlands en raad het Arabische woord.</small></span></button>
+          <button className="module-card" onClick={() => setStyle("ar-nl")}><span className="module-number">B</span><span><strong>Arabisch → Nederlands</strong><small>Lees de Arabische vorm en raad de betekenis.</small></span></button>
+          <button className="module-card" onClick={() => setStyle("quiz")}><span className="module-number">C</span><span><strong>Meerkeuze</strong><small>Kies het juiste Arabische woord uit vier opties.</small></span></button>
+          <button className="module-card" onClick={() => setStyle("dual")}><span className="module-number">D</span><span><strong>Tweevoud oefenen</strong><small>Leer twee-vormen{dualExample ? ` zoals ${dualExample.arabicDualRaf} en ${dualExample.arabicDualJarr}.` : " met rafʿ en majrūr."}</small></span></button>
+        </div>
+      ) : <VocabularyListMode />}
+    </section>
+  );
+}
+
+const theoryModes: TheoryMode[] = [
+  "fourForms", "definiteness", "jar", "ishara", "gender", "writing",
+];
+
+function LearningModule({
+  mode,
+  items,
+  onBack,
+}: {
+  mode: TheoryMode;
+  items: VocabularyItem[];
+  onBack: () => void;
+}) {
+  const [view, setView] = useState<"menu" | "theory" | "practice">("menu");
+  if (view === "theory") return <TheoryPage mode={mode} onBack={() => setView("menu")} />;
+  if (view === "practice") {
+    return (
+      <QuizMode
+        title={modeLabels[mode].title}
+        initialQuestions={makeQuestions(mode, items, 10)}
+        onBack={() => setView("menu")}
+      />
+    );
+  }
+  return (
+    <section>
+      <button className="back-link" onClick={onBack}>← Terug naar start</button>
+      <div className="screen-title"><p>{modeLabels[mode].title}</p><h2>Kies wat je wilt doen</h2></div>
+      <div className="practice-choice theory-choice">
+        <button className="module-card" onClick={() => setView("theory")}><span className="module-number">1</span><span><strong>Leren</strong><small>Lees de regels en bekijk duidelijke voorbeelden.</small></span></button>
+        <button className="module-card" onClick={() => setView("practice")}><span className="module-number">2</span><span><strong>{mode === "writing" ? "Schrijf op papier" : "Oefenen"}</strong><small>{modeLabels[mode].subtitle}</small></span></button>
+      </div>
+    </section>
+  );
+}
+
+function EmptyState({ onBack }: { onBack: () => void }) {
+  return <div className="empty"><h2>Geen woorden in deze categorie</h2><p>Kies op het startscherm een andere categorie.</p><button onClick={onBack}>Terug naar start</button></div>;
+}
+
+function ResultsScreen({
+  score,
+  total,
+  mistakes,
+  onRetry,
+  onHome,
+}: {
+  score: number;
+  total: number;
+  mistakes: Mistake[];
+  onRetry: () => void;
+  onHome: () => void;
+}) {
+  const percent = Math.round((score / total) * 100);
+  return (
+    <section className="results">
+      <p className="eyebrow">Ronde klaar</p>
+      <h2>{percent}%</h2>
+      <p>Je had {score} van de {total} vragen goed.</p>
+      {mistakes.length ? (
+        <>
+          <h3>Mijn fouten</h3>
+          <div className="mistake-list">
+            {mistakes.map((mistake, index) => (
+              <article key={`${mistake.question.id}-${index}`}>
+                <span>{mistake.question.prompt}</span>
+                <b className="arabic">{mistake.question.answer}</b>
+              </article>
+            ))}
+          </div>
+          <button className="primary full" onClick={onRetry}>Oefen mijn fouten opnieuw</button>
+        </>
+      ) : <div className="perfect">Alles goed. Knap gedaan!</div>}
+      <button className="secondary full" onClick={onHome}>Terug naar start</button>
+    </section>
+  );
+}
+
+function QuizMode({
+  title,
+  initialQuestions,
+  onBack,
+}: {
+  title: string;
+  initialQuestions: Question[];
+  onBack: () => void;
+}) {
+  const [questions, setQuestions] = useState(initialQuestions);
+  const [index, setIndex] = useState(0);
+  const [score, setScore] = useState(0);
+  const [mistakes, setMistakes] = useState<Mistake[]>([]);
+  const [selected, setSelected] = useState<string | null>(null);
+  const [revealed, setRevealed] = useState(false);
+  const [finished, setFinished] = useState(false);
+  const question = questions[index];
+
+  if (!questions.length) return <EmptyState onBack={onBack} />;
+  if (finished) {
+    return <ResultsScreen score={score} total={questions.length} mistakes={mistakes} onHome={onBack} onRetry={() => {
+      setQuestions(mistakes.map((mistake) => mistake.question));
+      setIndex(0); setScore(0); setMistakes([]); setSelected(null); setRevealed(false); setFinished(false);
+    }} />;
+  }
+
+  const choose = (answer: string) => {
+    if (selected || revealed) return;
+    setSelected(answer);
+    if (normalizeAnswer(answer) === normalizeAnswer(question.answer)) setScore((value) => value + 1);
+    else setMistakes((values) => [...values, { question, chosen: answer }]);
+  };
+
+  const selfMark = (correct: boolean) => {
+    setSelected(correct ? question.answer : "Zelf als fout beoordeeld");
+    if (correct) setScore((value) => value + 1);
+    else setMistakes((values) => [...values, { question, chosen: "Zelf als fout beoordeeld" }]);
+  };
+
+  const next = () => {
+    if (index + 1 >= questions.length) setFinished(true);
+    else { setIndex((value) => value + 1); setSelected(null); setRevealed(false); }
+  };
+
+  const resetRound = () => {
+    setQuestions(shuffleArray(initialQuestions));
+    setIndex(0);
+    setScore(0);
+    setMistakes([]);
+    setSelected(null);
+    setRevealed(false);
+    setFinished(false);
+  };
+
+  const answered = Boolean(selected);
+  const isCorrect = selected === question.answer;
+  return (
+    <section>
+      <div className="quiz-actions">
+        <button className="back-link" onClick={onBack}>← Terug</button>
+        <button className="back-link" onClick={resetRound}>Ronde opnieuw</button>
+      </div>
+      <div className="screen-title"><p>{title}</p><h2>{question.prompt}</h2>{question.detail && <span>{question.detail}</span>}</div>
+      <ScoreBar current={index} total={questions.length} score={score} />
+      {question.selfCheck ? (
+        <div className="self-check">
+          <p>Schrijf je antwoord met volledige tashkīl en eind-iʿrāb.</p>
+          {!revealed && <button className="primary full" onClick={() => setRevealed(true)}>Toon antwoord</button>}
+          {revealed && (
+            <>
+              <div className="answer-reveal"><span>Het juiste antwoord is:</span><b className="arabic">{question.answer}</b></div>
+              {!answered && <div className="two-buttons"><button className="correct" onClick={() => selfMark(true)}>Ik had het juist</button><button className="wrong" onClick={() => selfMark(false)}>Ik had het fout</button></div>}
+              {answered && <button className="primary full" onClick={next}>Volgende</button>}
+            </>
+          )}
+        </div>
+      ) : (
+        <div className="answer-grid">
+          {question.options.map((option) => (
+            <button
+              key={option}
+              className={`answer-option arabic ${selected === option ? (option === question.answer ? "chosen-correct" : "chosen-wrong") : ""}`}
+              disabled={answered}
+              onClick={() => choose(option)}
+              dir="rtl"
+            >{option}</button>
+          ))}
+          {!answered && <button className="show-answer" onClick={() => { setRevealed(true); setMistakes((values) => [...values, { question, chosen: "Antwoord getoond" }]); }}>Toon antwoord</button>}
+        </div>
+      )}
+      {!question.selfCheck && (answered || revealed) && (
+        <div className={`feedback ${isCorrect ? "good" : "try"}`}>
+          <strong>{isCorrect ? "Goed!" : "Bijna. Het juiste antwoord is:"}</strong>
+          {!isCorrect && <b className="arabic">{question.answer}</b>}
+          {question.explanation && <p>{question.explanation}</p>}
+          {answered && <button className="primary full" onClick={next}>Volgende</button>}
+          {revealed && !question.selfCheck && <button className="primary full" onClick={next}>Volgende</button>}
+        </div>
+      )}
+    </section>
+  );
+}
+
+export default function App() {
+  const [mode, setMode] = useState<Mode>("home");
+  const [category, setCategory] = useState<"all" | Category>("all");
+  const [roundKey, setRoundKey] = useState(0);
+  const filtered = useMemo(
+    () => category === "all" ? vocabulary : vocabulary.filter((item) => item.category === category),
+    [category],
+  );
+
+  const goHome = () => { setMode("home"); setRoundKey((value) => value + 1); };
+  const start = (nextMode: Exclude<Mode, "home">) => { setMode(nextMode); setRoundKey((value) => value + 1); };
+
+  return (
+    <main className="app-shell">
+      {mode === "home" && <HomeScreen category={category} onCategory={setCategory} onStart={start} />}
+      {mode === "vocabulary" && <VocabularyMode key={roundKey} items={filtered} onBack={goHome} />}
+      {mode === "adad" && <AdadModule key={roundKey} onBack={goHome} />}
+      {mode === "mubtadaKhabar" && <MubtadaKhabarModule key={roundKey} onBack={goHome} />}
+      {mode === "adadMadud" && <AdadMadudModule key={roundKey} onBack={goHome} />}
+      {mode === "sunMoon" && <SunMoonLettersModule key={roundKey} onBack={goHome} />}
+      {mode === "zarf" && <DarfMakaanModule key={roundKey} onBack={goHome} />}
+      {mode === "mudafMudafIlayhi" && <MudafMudafIlayhiModule key={roundKey} onBack={goHome} />}
+      {mode === "readingComprehension" && <ReadingComprehensionModule key={roundKey} onBack={goHome} />}
+      {mode === "iraabCases" && <IraabCasesModule key={roundKey} onBack={goHome} />}
+      {mode === "grammar" && <WordTypesModule key={roundKey} onBack={goHome} />}
+      {theoryModes.includes(mode as TheoryMode) && <LearningModule key={roundKey} mode={mode as TheoryMode} items={filtered} onBack={goHome} />}
+      {mode !== "home" && mode !== "vocabulary" && mode !== "adad" && mode !== "mubtadaKhabar" && mode !== "adadMadud" && mode !== "sunMoon" && mode !== "zarf" && mode !== "mudafMudafIlayhi" && mode !== "readingComprehension" && mode !== "iraabCases" && mode !== "grammar" && !theoryModes.includes(mode as TheoryMode) && (
+        <QuizMode
+          key={`${mode}-${roundKey}`}
+          title={modeLabels[mode].title}
+          initialQuestions={makeQuestions(mode, filtered, mode === "exam" ? 20 : 10)}
+          onBack={goHome}
+        />
+      )}
+    </main>
+  );
+}
